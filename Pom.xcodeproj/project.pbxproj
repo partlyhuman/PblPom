@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DB6A971018262AED00D8625A /* hello_world.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A970F18262AED00D8625A /* hello_world.c */; };
-		DB6A9713182643D000D8625A /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A9712182643D000D8625A /* text.c */; };
+		DB6A971018262AED00D8625A /* pom.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A970F18262AED00D8625A /* pom.c */; };
+		DB6A9713182643D000D8625A /* pom_text.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A9712182643D000D8625A /* pom_text.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,11 +24,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DB57D842182648A1005F8827 /* hello_world.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = hello_world.h; path = src/hello_world.h; sourceTree = "<group>"; };
-		DB6A970118262A6600D8625A /* hello_world */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hello_world; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB6A970F18262AED00D8625A /* hello_world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hello_world.c; path = src/hello_world.c; sourceTree = "<group>"; };
-		DB6A9712182643D000D8625A /* text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = text.c; path = src/text.c; sourceTree = "<group>"; };
-		DB6A97141826441B00D8625A /* text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = text.h; path = src/text.h; sourceTree = "<group>"; };
+		DB57D842182648A1005F8827 /* pom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pom.h; path = src/pom.h; sourceTree = "<group>"; };
+		DB64E77F1826F09E002BAC73 /* pom_vibes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pom_vibes.h; path = src/pom_vibes.h; sourceTree = "<group>"; };
+		DB6A970118262A6600D8625A /* Pom */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pom; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB6A970F18262AED00D8625A /* pom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pom.c; path = src/pom.c; sourceTree = "<group>"; };
+		DB6A9712182643D000D8625A /* pom_text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pom_text.c; path = src/pom_text.c; sourceTree = "<group>"; };
+		DB6A97141826441B00D8625A /* pom_text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pom_text.h; path = src/pom_text.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,10 +46,11 @@
 		DB6A96F818262A6600D8625A = {
 			isa = PBXGroup;
 			children = (
-				DB6A970F18262AED00D8625A /* hello_world.c */,
-				DB57D842182648A1005F8827 /* hello_world.h */,
-				DB6A9712182643D000D8625A /* text.c */,
-				DB6A97141826441B00D8625A /* text.h */,
+				DB64E77F1826F09E002BAC73 /* pom_vibes.h */,
+				DB6A970F18262AED00D8625A /* pom.c */,
+				DB57D842182648A1005F8827 /* pom.h */,
+				DB6A9712182643D000D8625A /* pom_text.c */,
+				DB6A97141826441B00D8625A /* pom_text.h */,
 				DB6A970218262A6600D8625A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,7 +58,7 @@
 		DB6A970218262A6600D8625A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DB6A970118262A6600D8625A /* hello_world */,
+				DB6A970118262A6600D8625A /* Pom */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,9 +66,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DB6A970018262A6600D8625A /* hello_world */ = {
+		DB6A970018262A6600D8625A /* Pom */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB6A970A18262A6600D8625A /* Build configuration list for PBXNativeTarget "hello_world" */;
+			buildConfigurationList = DB6A970A18262A6600D8625A /* Build configuration list for PBXNativeTarget "Pom" */;
 			buildPhases = (
 				DB6A96FD18262A6600D8625A /* Sources */,
 				DB6A96FE18262A6600D8625A /* Frameworks */,
@@ -76,9 +78,9 @@
 			);
 			dependencies = (
 			);
-			name = hello_world;
+			name = Pom;
 			productName = hello_world;
-			productReference = DB6A970118262A6600D8625A /* hello_world */;
+			productReference = DB6A970118262A6600D8625A /* Pom */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -90,7 +92,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = partlyhuman;
 			};
-			buildConfigurationList = DB6A96FC18262A6600D8625A /* Build configuration list for PBXProject "hello_world" */;
+			buildConfigurationList = DB6A96FC18262A6600D8625A /* Build configuration list for PBXProject "Pom" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -102,7 +104,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DB6A970018262A6600D8625A /* hello_world */,
+				DB6A970018262A6600D8625A /* Pom */,
 			);
 		};
 /* End PBXProject section */
@@ -112,8 +114,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB6A9713182643D000D8625A /* text.c in Sources */,
-				DB6A971018262AED00D8625A /* hello_world.c in Sources */,
+				DB6A9713182643D000D8625A /* pom_text.c in Sources */,
+				DB6A971018262AED00D8625A /* pom.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,7 +194,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				OTHER_CFLAGS = "-DXCODE=1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Pom;
 				USER_HEADER_SEARCH_PATHS = include/;
 			};
 			name = Debug;
@@ -201,7 +203,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				OTHER_CFLAGS = "-DXCODE=1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Pom;
 				USER_HEADER_SEARCH_PATHS = include/;
 			};
 			name = Release;
@@ -209,7 +211,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DB6A96FC18262A6600D8625A /* Build configuration list for PBXProject "hello_world" */ = {
+		DB6A96FC18262A6600D8625A /* Build configuration list for PBXProject "Pom" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB6A970818262A6600D8625A /* Debug */,
@@ -218,7 +220,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB6A970A18262A6600D8625A /* Build configuration list for PBXNativeTarget "hello_world" */ = {
+		DB6A970A18262A6600D8625A /* Build configuration list for PBXNativeTarget "Pom" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB6A970B18262A6600D8625A /* Debug */,
