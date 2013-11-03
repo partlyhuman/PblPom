@@ -128,22 +128,18 @@ void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
 
     // heartbeat
     if (isWorking && app.settings.vibrateWhileWorking && (event->units_changed & MINUTE_UNIT) > 0) {
-        light_enable_interaction();
         vibes_enqueue_custom_pattern(VIBRATE_MINIMAL);
     }
     
-    float pct = (app.totalTicks - app.ticksRemaining + 0.0) / app.totalTicks;
-
     // resize inverter
+    float pctRemaining = (app.ticksRemaining + 0.0) / app.totalTicks;
     GRect inverterFrame = GRect(0, 0, FULL_SIZE.w, 0);
     if (isWorking) {
-        inverterFrame.size.h = pct * FULL_SIZE.h;
+        inverterFrame.size.h = (1.0 - pctRemaining) * FULL_SIZE.h;
     }
     else if (isResting) {
-        inverterFrame.size.h = (1.0 - pct) * FULL_SIZE.h;
+        inverterFrame.size.h = pctRemaining * FULL_SIZE.h;
     }
-    if (inverterFrame.size.h >= FULL_SIZE.h) inverterFrame.size.h = FULL_SIZE.h;
-    if (inverterFrame.size.h <= 0) inverterFrame.size.h = 0;
     layer_set_frame(&app.inverterLayer.layer, inverterFrame);
     
     // set timer text
@@ -207,6 +203,11 @@ void pbl_main(void *params) {
         .takeLongRests = true,
         .vibrateWhileWorking = true,
     };
+    
+#ifndef RELEASE
+    app.settings.restTicks = 10;
+    app.settings.workTicks = 30;
+#endif
     
     PebbleAppHandlers handlers = {
         .init_handler = &pomOnInit,
