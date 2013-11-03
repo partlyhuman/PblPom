@@ -46,9 +46,9 @@
 		DB6A96F818262A6600D8625A = {
 			isa = PBXGroup;
 			children = (
-				DB64E77F1826F09E002BAC73 /* pom_vibes.h */,
 				DB6A970F18262AED00D8625A /* pom.c */,
 				DB57D842182648A1005F8827 /* pom.h */,
+				DB64E77F1826F09E002BAC73 /* pom_vibes.h */,
 				DB6A9712182643D000D8625A /* pom_text.c */,
 				DB6A97141826441B00D8625A /* pom_text.h */,
 				DB6A970218262A6600D8625A /* Products */,

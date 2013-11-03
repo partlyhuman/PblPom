@@ -5,15 +5,18 @@
 #define POM_NAME "Pom"
 
 typedef enum {
+    PomStateReady,
     PomStateWorking,
     PomStateResting,
-    PomStatePaused
 } PomState;
 
 typedef struct {
     unsigned int language;
     unsigned int workTicks;
     unsigned int restTicks;
+    unsigned int longRestTicks;
+    unsigned int pomsPerLongRest;
+    bool takeLongRests;
     bool vibrateWhileWorking;
 } PomSettings;
 
@@ -24,10 +27,10 @@ typedef struct {
     
     unsigned int completedPoms;
     int ticksRemaining;
-    int ticks;
+    int totalTicks;
     PomState state;
     
-    Window window;
+    Window mainWindow;
     TextLayer workingTextLayer;
     TextLayer timeTextLayer;
     InverterLayer inverterLayer;

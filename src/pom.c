@@ -7,22 +7,16 @@
 
 // constants
 static const GSize FULL_SIZE = {144, 168};
-static const uint32_t VIBRATE_WORKING_REMINDER_MS = 50;
 
 // Global app handle
 static PomApplication app;
 
 // Utilities --------------------------------------------------------------
 
-/** Vibrates a custom duration, just one pulse */
-void vibrateFor(uint32_t ms) {
-    static VibePattern pat;
-    static uint32_t durations[1];
-    durations[0] = ms;
-    pat.num_segments = 1;
-    pat.durations = durations;
-    vibes_enqueue_custom_pattern(pat);
-}
+static char gLog[256]; // shared logging buffer
+#define LOG(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, gLog)
+#define WARN(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, gLog)
+#define ERROR(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, gLog)
 
 static char gTimeString[6]; // shared time format buffer
 /** Formats a time into MM:SS, e.g. 04:50 */
@@ -31,64 +25,82 @@ inline void formatTime(char* str, int seconds) {
     snprintf(str, 6, "%02d:%02d", seconds / 60, seconds % 60);
 }
 
-static char gLog[256]; // shared logging buffer
-#define LOG(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, gLog)
-#define WARN(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, gLog)
-#define ERROR(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, gLog)
-
 //  Application  ------------------------------------------------------------
 
-void pomSetState(PomState newState) {
-    app.state = newState;
+/** Move layers to the appropriate positions. Helper for pomSetState(). */
+void pomMoveTextLayers() {
     GRect frame;
-
-    switch (newState) {
+    switch (app.state) {
         case PomStateWorking:
-            app.ticks = 0;
-            app.ticksRemaining = app.settings.workTicks;
-            
-            text_layer_set_text(&app.workingTextLayer, POM_TEXT_WORK[app.settings.language]);
-            formatTime(gTimeString, app.settings.workTicks);
-            text_layer_set_text(&app.timeTextLayer, gTimeString);
-
+        case PomStateReady:
             frame = app.workingTextLayer.layer.frame;
             frame.origin.y = 2;
             layer_set_frame(&app.workingTextLayer.layer, frame);
             frame = app.timeTextLayer.layer.frame;
             frame.origin.y = 45;
             layer_set_frame(&app.timeTextLayer.layer, frame);
-
             break;
-
         case PomStateResting:
-            app.ticks = 0;
-            app.ticksRemaining = app.settings.restTicks;
-
-            text_layer_set_text(&app.workingTextLayer, POM_TEXT_REST[app.settings.language]);
-            formatTime(gTimeString, app.settings.restTicks);
-            text_layer_set_text(&app.timeTextLayer, gTimeString);
-            
             frame = app.workingTextLayer.layer.frame;
             frame.origin.y = FULL_SIZE.h - 65 - 2;
             layer_set_frame(&app.workingTextLayer.layer, frame);
             frame = app.timeTextLayer.layer.frame;
             frame.origin.y = FULL_SIZE.h - 20 - 2;
             layer_set_frame(&app.timeTextLayer.layer, frame);
+            break;
+        default:
+            break;
+    }
+    frame = app.timeTextLayer.layer.frame;
+    frame.size.w = (app.state == PomStateReady)? 80 : 30;
+    layer_set_frame(&app.timeTextLayer.layer, frame);
+}
+
+/** Change the state between ready, working, and resting. */
+void pomSetState(PomState newState) {
+    app.state = newState;
+
+    switch (newState) {
+        case PomStateWorking:
+            app.totalTicks = app.ticksRemaining = app.settings.workTicks;
             
+            text_layer_set_text(&app.workingTextLayer, POM_TEXT_WORK[app.settings.language]);
+            formatTime(gTimeString, app.settings.workTicks);
+            text_layer_set_text(&app.timeTextLayer, gTimeString);
+            break;
+
+        case PomStateResting:
+            app.totalTicks = app.ticksRemaining = app.settings.restTicks;
+            if (app.settings.takeLongRests && (app.completedPoms % app.settings.pomsPerLongRest == 0)) {
+                app.ticksRemaining = app.settings.longRestTicks;
+            }
+
+            text_layer_set_text(&app.workingTextLayer, POM_TEXT_REST[app.settings.language]);
+            formatTime(gTimeString, app.settings.restTicks);
+            text_layer_set_text(&app.timeTextLayer, gTimeString);
+            break;
+            
+        case PomStateReady:
+            layer_set_bounds(&app.inverterLayer.layer, GRectZero);
+            text_layer_set_text(&app.workingTextLayer, POM_TEXT_READY[app.settings.language]);
+            static char pomCounterString[64];
+            snprintf(pomCounterString, ARRAY_LENGTH(pomCounterString), POM_TEXT_POM_COUNTER[app.settings.language], app.completedPoms);
+            text_layer_set_text(&app.timeTextLayer, pomCounterString);
             break;
 
         default:
             WARN("Unhandled state change %d", newState);
             break;
     }
-//    layer_mark_dirty(&app.window.layer);
+
+    pomMoveTextLayers();
+    layer_mark_dirty(&app.mainWindow.layer);
 //    layer_set_frame(&app.inverterLayer.layer, GRectZero);
 }
 
+/** Tick handler. Called every second. Also called on the minute for "heartbeat" working reminders. */
 void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
-    if (app.state == PomStatePaused) return;
-
-    app.ticks++;
+    if (app.state == PomStateReady) return;
     app.ticksRemaining--;
     
     // check for time up
@@ -106,7 +118,7 @@ void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
             // time to start another pomodoro.
             vibes_enqueue_custom_pattern(VIBRATE_DIT_DIT_DAH);
             light_enable_interaction();
-            pomSetState(PomStateWorking);
+            pomSetState(PomStateReady);
             return;
         }
     }
@@ -120,8 +132,7 @@ void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
         vibes_enqueue_custom_pattern(VIBRATE_MINIMAL);
     }
     
-    int totalTicks = (isWorking)? app.settings.workTicks : app.settings.restTicks;
-    float pct = (app.ticks + 0.0) / totalTicks;
+    float pct = (app.totalTicks - app.ticksRemaining + 0.0) / app.totalTicks;
 
     // resize inverter
     GRect inverterFrame = GRect(0, 0, FULL_SIZE.w, 0);
@@ -140,29 +151,46 @@ void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
     text_layer_set_text(&app.timeTextLayer, gTimeString);
     
     // redraw!
-    layer_mark_dirty(&app.window.layer);
+    layer_mark_dirty(&app.mainWindow.layer);
 }
 
+/** Handles up or down button click while in main window. Use this click to start or restart a cycle. */
+void pomOnMainWindowUpOrDownClick(ClickRecognizerRef recognizer, void *context) {
+    if (app.state == PomStateReady) {
+        pomSetState(PomStateWorking);
+    } else {
+        pomSetState(PomStateReady);
+    }
+}
+
+/** Set up click handlers on the main window. */
+void pomMainWindowClickProvider(ClickConfig **buttonConfigs, void *context) {
+    buttonConfigs[BUTTON_ID_UP]->click.handler =
+        buttonConfigs[BUTTON_ID_DOWN]->click.handler =
+        pomOnMainWindowUpOrDownClick;
+}
+
+/** App initialization. */
 void pomOnInit(AppContextRef ctx) {
-    vibes_enqueue_custom_pattern(VIBRATE_MINIMAL);
-    window_init(&app.window, "Pom");
-    window_set_fullscreen(&app.window, true);
-    window_set_background_color(&app.window, GColorWhite);
+    window_init(&app.mainWindow, "Pom");
+    window_set_fullscreen(&app.mainWindow, true);
+    window_set_background_color(&app.mainWindow, GColorWhite);
+    window_set_click_config_provider(&app.mainWindow, pomMainWindowClickProvider);
     
-    text_layer_init(&app.workingTextLayer, GRect(2, 2, FULL_SIZE.w, 45));
+    text_layer_init(&app.workingTextLayer, GRect(2, 2, FULL_SIZE.w, 50));
     text_layer_set_font(&app.workingTextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
     
-    text_layer_init(&app.timeTextLayer, GRect(4, 45, FULL_SIZE.w, 30));
+    text_layer_init(&app.timeTextLayer, GRect(4, 45, 80, 30));
     text_layer_set_font(&app.timeTextLayer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
     
     inverter_layer_init(&app.inverterLayer, GRectZero);
     
-    layer_add_child(&app.window.layer, &app.workingTextLayer.layer);
-    layer_add_child(&app.window.layer, &app.timeTextLayer.layer);
-    layer_add_child(&app.window.layer, &app.inverterLayer.layer);
-    window_stack_push(&app.window, true);
+    layer_add_child(&app.mainWindow.layer, &app.workingTextLayer.layer);
+    layer_add_child(&app.mainWindow.layer, &app.timeTextLayer.layer);
+    layer_add_child(&app.mainWindow.layer, &app.inverterLayer.layer);
+    window_stack_push(&app.mainWindow, true);
     
-    pomSetState(PomStateWorking);
+    pomSetState(PomStateReady);
 }
 
 //  Pebble Core ------------------------------------------------------------
@@ -172,8 +200,11 @@ void pbl_main(void *params) {
     // TODO load settings from persistent storage
     app.settings = (PomSettings){
         .language = PomEnglish,
-        .workTicks = 60 * 0.2,
-        .restTicks = 60 * 0.2,
+        .workTicks = 60 * 25,
+        .restTicks = 60 * 5,
+        .longRestTicks = 60 * 15,
+        .pomsPerLongRest = 4,
+        .takeLongRests = true,
         .vibrateWhileWorking = true,
     };
     
