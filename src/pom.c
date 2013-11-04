@@ -4,19 +4,12 @@
 #include "pom.h"
 #include "pom_vibes.h"
 #include "pom_text.h"
+#include "pom_menu.h"
 
 // constants
 static const GSize FULL_SIZE = {144, 168};
 
-// Global app handle
-static PomApplication app;
-
 // Utilities --------------------------------------------------------------
-
-static char gLog[256]; // shared logging buffer
-#define LOG(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, gLog)
-#define WARN(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, gLog)
-#define ERROR(...) snprintf(gLog, ARRAY_LENGTH(gLog), __VA_ARGS__); app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, gLog)
 
 static char gTimeString[6]; // shared time format buffer
 /** Formats a time into MM:SS, e.g. 04:50 */
@@ -159,11 +152,23 @@ void pomOnMainWindowUpOrDownClick(ClickRecognizerRef recognizer, void *context) 
     }
 }
 
+/** Select (middle button) click handler. Launches into settings menu. */
+void pomOnMainWindowSelectClick(ClickRecognizerRef recognizer, void *context) {
+    LOG("Trapped middle click");
+    if (window_stack_contains_window(&app.menuWindow)) {
+        WARN("Window already in window stack");
+        return;
+    }
+    LOG("Pushing menu window");
+    window_stack_push(&app.menuWindow, true);
+}
+
 /** Set up click handlers on the main window. */
 void pomMainWindowClickProvider(ClickConfig **buttonConfigs, void *context) {
     buttonConfigs[BUTTON_ID_UP]->click.handler =
         buttonConfigs[BUTTON_ID_DOWN]->click.handler =
         pomOnMainWindowUpOrDownClick;
+    buttonConfigs[BUTTON_ID_SELECT]->click.handler = pomOnMainWindowSelectClick;
 }
 
 /** App initialization. */
@@ -186,6 +191,7 @@ void pomOnInit(AppContextRef ctx) {
     layer_add_child(&app.mainWindow.layer, &app.inverterLayer.layer);
     window_stack_push(&app.mainWindow, true);
     
+    pomInitMenus();
     pomSetState(PomStateReady);
 }
 
@@ -203,6 +209,8 @@ void pbl_main(void *params) {
         .takeLongRests = true,
         .vibrateWhileWorking = true,
     };
+    
+    app.completedPoms = 0;
     
 #ifndef RELEASE
     app.settings.restTicks = 10;

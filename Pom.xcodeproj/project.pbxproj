@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DB6A971018262AED00D8625A /* pom.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A970F18262AED00D8625A /* pom.c */; };
 		DB6A9713182643D000D8625A /* pom_text.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A9712182643D000D8625A /* pom_text.c */; };
+		DBB3C54C18270C9600634F6A /* pom_menu.c in Sources */ = {isa = PBXBuildFile; fileRef = DBB3C54B18270C9600634F6A /* pom_menu.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,8 @@
 		DB6A970F18262AED00D8625A /* pom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pom.c; path = src/pom.c; sourceTree = "<group>"; };
 		DB6A9712182643D000D8625A /* pom_text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pom_text.c; path = src/pom_text.c; sourceTree = "<group>"; };
 		DB6A97141826441B00D8625A /* pom_text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pom_text.h; path = src/pom_text.h; sourceTree = "<group>"; };
+		DBB3C54B18270C9600634F6A /* pom_menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pom_menu.c; path = src/pom_menu.c; sourceTree = "<group>"; };
+		DBB3C54E18270CDE00634F6A /* pom_menu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pom_menu.h; path = src/pom_menu.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,9 +51,11 @@
 			children = (
 				DB6A970F18262AED00D8625A /* pom.c */,
 				DB57D842182648A1005F8827 /* pom.h */,
-				DB64E77F1826F09E002BAC73 /* pom_vibes.h */,
+				DBB3C54B18270C9600634F6A /* pom_menu.c */,
+				DBB3C54E18270CDE00634F6A /* pom_menu.h */,
 				DB6A9712182643D000D8625A /* pom_text.c */,
 				DB6A97141826441B00D8625A /* pom_text.h */,
+				DB64E77F1826F09E002BAC73 /* pom_vibes.h */,
 				DB6A970218262A6600D8625A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +121,7 @@
 			files = (
 				DB6A9713182643D000D8625A /* pom_text.c in Sources */,
 				DB6A971018262AED00D8625A /* pom.c in Sources */,
+				DBB3C54C18270C9600634F6A /* pom_menu.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,7 +199,7 @@
 		DB6A970B18262A6600D8625A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				OTHER_CFLAGS = "-DXCODE=1";
+				GCC_PREPROCESSOR_DEFINITIONS = "XCODE=1";
 				PRODUCT_NAME = Pom;
 				USER_HEADER_SEARCH_PATHS = include/;
 			};
@@ -202,7 +208,10 @@
 		DB6A970C18262A6600D8625A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				OTHER_CFLAGS = "-DXCODE=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"XCODE=1",
+					"RELEASE=1",
+				);
 				PRODUCT_NAME = Pom;
 				USER_HEADER_SEARCH_PATHS = include/;
 			};
