@@ -229,5 +229,5 @@ void pbl_main(void *params) {
 }
 
 #ifndef XCODE
-PBL_APP_INFO_SIMPLE(POM_UUID, POM_NAME, "Partlyhuman", 1);
+PBL_APP_INFO(POM_UUID, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
 #endif
