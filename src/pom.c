@@ -9,6 +9,9 @@
 // constants
 static const GSize FULL_SIZE = {144, 168};
 
+// the common, global app structure
+PomApplication app;
+
 // Utilities --------------------------------------------------------------
 
 static char gTimeString[6]; // shared time format buffer

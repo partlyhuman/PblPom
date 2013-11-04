@@ -44,5 +44,5 @@ typedef struct {
 } PomApplication;
 
 //the shared, global, application structure
-PomApplication app;
+extern PomApplication app;
 
