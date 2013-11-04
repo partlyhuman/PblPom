@@ -15,21 +15,53 @@ static SimpleMenuItem menuItems[PomMenuItemCount];
 static SimpleMenuSection menuSectionRoot;
 static SimpleMenuSection menuSectionsAll[1];
 
+static NumberWindow durationChooserWindow;
+
+void pomOnNumberSelect(struct NumberWindow *window, void *context) {
+    int value = number_window_get_value(window);
+    int ticks = value * 60;
+    PomMenuId id = simple_menu_layer_get_selected_index(&menuLayer);
+        switch (id) {
+        case PomMenuRestDuration:
+            app.settings.restTicks = ticks;
+            break;
+        case PomMenuWorkDuration:
+            app.settings.workTicks = ticks;
+            break;
+        default:
+            return;
+    }
+    window_stack_pop(true);
+    pomUpdateMenus();
+}
+
 void pomOnMenuSelect(int index, void *context) {
     LOG("CLICK on %d", index);
     PomSettings *s = &app.settings;
     PomMenuId id = index;
     switch (id) {
         case PomMenuLanguage:
-            LOG("Changing language! Old language=%d", s->language);
             if (++s->language >= PomLanguageCount) {
                 s->language = 0;
             }
-            LOG("New language=%d", s->language);
             break;
         
         case PomMenuVibrateWhileWorking:
             s->vibrateWhileWorking = !s->vibrateWhileWorking;
+            break;
+            
+        case PomMenuRestDuration:
+            number_window_set_value(&durationChooserWindow, s->restTicks/60);
+            number_window_set_step_size(&durationChooserWindow, 1);
+            number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_REST_DURATION[s->language]);
+            window_stack_push((Window*)&durationChooserWindow, true);
+            break;
+            
+        case PomMenuWorkDuration:
+            number_window_set_value(&durationChooserWindow, s->workTicks/60);
+            number_window_set_step_size(&durationChooserWindow, 5);
+            number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_WORK_DURATION[s->language]);
+            window_stack_push((Window*)&durationChooserWindow, true);
             break;
             
         default:
@@ -113,6 +145,11 @@ void pomInitMenus() {
                            1,
                            NULL);
     layer_add_child(&app.menuWindow.layer, simple_menu_layer_get_layer(&menuLayer));
+    
+    number_window_init(&durationChooserWindow, "Duration", (NumberWindowCallbacks){.selected = pomOnNumberSelect}, NULL);
+    number_window_set_min(&durationChooserWindow, 1);
+    number_window_set_max(&durationChooserWindow, 60);
+    number_window_set_step_size(&durationChooserWindow, 1);
 
     LOG("DONE INITIALIZING");
 }

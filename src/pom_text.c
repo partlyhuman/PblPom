@@ -1,5 +1,7 @@
 #include "pom_text.h"
 
+// Main screen text
+
 const char* POM_TEXT_WORK[] = {
     [PomEnglish] = "work",
     [PomSpanish] = "trabajo",
@@ -17,11 +19,11 @@ const char* POM_TEXT_POM_COUNTER[] = {
     [PomSpanish] = "Completado %d",
 };
 
-///////////////////////////
+// Reusable text
 
 const char* POM_TEXT_YES[] = {
     [PomEnglish] = "Yes",
-    [PomSpanish] = "Si",
+    [PomSpanish] = "Sí",
 };
 const char* POM_TEXT_NO[] = {
     [PomEnglish] = "No",
@@ -36,7 +38,7 @@ const char* POM_TEXT_X_MINUTES[] = {
     [PomSpanish] = "%d min",
 };
 
-////////////////////////
+// Settings titles
 
 const char* POM_TEXT_SETTINGS_LANGUAGE[] = {
     [PomEnglish] = "Language",
@@ -44,7 +46,7 @@ const char* POM_TEXT_SETTINGS_LANGUAGE[] = {
 };
 const char* POM_TEXT_SETTINGS_LANGUAGES[] = {
     [PomEnglish] = "English",
-    [PomSpanish] = "Espanol",
+    [PomSpanish] = "Español",
 };
 const char* POM_TEXT_SETTINGS_WORK_DURATION[] = {
     [PomEnglish] = "Work for",
@@ -55,7 +57,7 @@ const char* POM_TEXT_SETTINGS_REST_DURATION[] = {
     [PomSpanish] = "Descansar para",
 };
 const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
-    [PomEnglish] = "Pulse while working",
-    [PomSpanish] = "Pulso mientras se trabaja",
+    [PomEnglish] = "Work ticking",
+    [PomSpanish] = "Terliz",
 };
 
