@@ -8,7 +8,7 @@ typedef enum {
     PomMenuRestDuration,
     PomMenuVibrateWhileWorking,
     PomMenuItemCount
-} PomMenuId;
+} PomMenuId; // Aliases for each menu item by index
 
 static SimpleMenuLayer menuLayer;
 static SimpleMenuItem menuItems[PomMenuItemCount];
@@ -17,6 +17,10 @@ static SimpleMenuSection menuSectionsAll[1];
 
 static NumberWindow durationChooserWindow;
 
+/**
+ Handler for number window, when you select a value.
+ Commits the selected value to the selected setting, and pops the window.
+*/
 void pomOnNumberSelect(struct NumberWindow *window, void *context) {
     int value = number_window_get_value(window);
     int ticks = value * 60;
@@ -35,8 +39,11 @@ void pomOnNumberSelect(struct NumberWindow *window, void *context) {
     pomUpdateMenus();
 }
 
+/**
+ Common handler attached to every menu item. Called when you click the select (middle) button on the menu item.
+ Either switches the value inline (e.g. for booleans), or opens a numeric stepper window (e.g. for durations).
+*/
 void pomOnMenuSelect(int index, void *context) {
-    LOG("CLICK on %d", index);
     PomSettings *s = &app.settings;
     PomMenuId id = index;
     switch (id) {
@@ -70,6 +77,7 @@ void pomOnMenuSelect(int index, void *context) {
     pomUpdateMenus();
 }
 
+/** Refreshes values expressed in the settings menu. */
 void pomUpdateMenus() {
     PomLanguage lang = app.settings.language;
     static char workDurationString[32];
@@ -82,6 +90,7 @@ void pomUpdateMenus() {
                 m->title = POM_TEXT_SETTINGS_LANGUAGE[lang];
                 m->subtitle = POM_TEXT_SETTINGS_LANGUAGES[lang];
                 break;
+                
             case PomMenuWorkDuration:
                 m->title = POM_TEXT_SETTINGS_WORK_DURATION[lang];
                 LOG(workDurationString);
@@ -89,45 +98,37 @@ void pomUpdateMenus() {
                 LOG(workDurationString);
                 m->subtitle = workDurationString;
                 break;
+                
             case PomMenuRestDuration:
                 m->title = POM_TEXT_SETTINGS_REST_DURATION[lang];
                 snprintf(restDurationString, ARRAY_LENGTH(restDurationString), POM_TEXT_X_MINUTES[lang], app.settings.restTicks / 60);
                 m->subtitle = restDurationString;
                 break;
+                
             case PomMenuVibrateWhileWorking:
                 m->title = POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[lang];
                 m->subtitle = POM_TEXT_BOOLEAN[app.settings.vibrateWhileWorking][lang];
                 break;
-            default: break;
+                
+            default:
+                break;
         }
     }
     menu_layer_reload_data((MenuLayer*)&menuLayer);
 }
 
-void pomBuildMenus() {
-    for (PomMenuId id = 0; id < PomMenuItemCount; id++) {
-        menuItems[id].callback = pomOnMenuSelect;
-    }
-    
-    menuSectionRoot.items = menuItems;
-    menuSectionRoot.num_items = PomMenuItemCount;
-    menuSectionRoot.title = "SETTINGS";
-    menuSectionsAll[0] = menuSectionRoot;
-}
-
+/** Window load handler for settings window. Called before opening the window. */
 void pomOnMenuWindowLoad(struct Window *menuWindowRef) {
-    LOG("LOading window");
     pomUpdateMenus();
-    LOG("Loading window complete");
 }
 
+/** Window unload handler for settings window. */
 void pomOnMenuWindowUnload(struct Window *menuWindowRef) {
-    LOG("Unloading menu window");
 }
 
-
+/** Initialize everything needed for settings menus. Called by pomOnInit(). */
 void pomInitMenus() {
-    LOG("Initializing menu");
+    // setup window with all the settings in it
     window_init(&app.menuWindow, "MENU");
     window_set_fullscreen(&app.menuWindow, true);
     window_set_background_color(&app.menuWindow, GColorWhite);
@@ -136,8 +137,17 @@ void pomInitMenus() {
         .unload = pomOnMenuWindowUnload,
     });
     
-    pomBuildMenus();
+    // setup menu items, sections, and menu
+    for (PomMenuId id = 0; id < PomMenuItemCount; id++) {
+        menuItems[id].callback = pomOnMenuSelect;
+        // all other properties will be set in pomUpdateMenus()
+    }
+    menuSectionRoot.items = menuItems;
+    menuSectionRoot.num_items = PomMenuItemCount;
+    menuSectionRoot.title = "SETTINGS";
+    menuSectionsAll[0] = menuSectionRoot;
     
+    // setup menu layer
     simple_menu_layer_init(&menuLayer,
                            app.menuWindow.layer.frame,
                            &app.menuWindow,
@@ -145,11 +155,10 @@ void pomInitMenus() {
                            1,
                            NULL);
     layer_add_child(&app.menuWindow.layer, simple_menu_layer_get_layer(&menuLayer));
-    
+
+    // setup number picker window, used when you edit a duration value
     number_window_init(&durationChooserWindow, "Duration", (NumberWindowCallbacks){.selected = pomOnNumberSelect}, NULL);
     number_window_set_min(&durationChooserWindow, 1);
     number_window_set_max(&durationChooserWindow, 60);
     number_window_set_step_size(&durationChooserWindow, 1);
-
-    LOG("DONE INITIALIZING");
 }

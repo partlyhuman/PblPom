@@ -157,12 +157,10 @@ void pomOnMainWindowUpOrDownClick(ClickRecognizerRef recognizer, void *context) 
 
 /** Select (middle button) click handler. Launches into settings menu. */
 void pomOnMainWindowSelectClick(ClickRecognizerRef recognizer, void *context) {
-    LOG("Trapped middle click");
     if (window_stack_contains_window(&app.menuWindow)) {
         WARN("Window already in window stack");
         return;
     }
-    LOG("Pushing menu window");
     window_stack_push(&app.menuWindow, true);
 }
 
