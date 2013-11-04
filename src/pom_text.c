@@ -60,4 +60,12 @@ const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
     [PomEnglish] = "Work ticking",
     [PomSpanish] = "Terliz",
 };
+const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[] = {
+    [PomEnglish] = "Take recesses",
+    [PomSpanish] = "Tomar recesos",
+};
+const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[] = {
+    [PomEnglish] = "Recess for",
+    [PomSpanish] = "Receso durante",
+};
 

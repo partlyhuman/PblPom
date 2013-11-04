@@ -21,3 +21,5 @@ extern const char* POM_TEXT_SETTINGS_LANGUAGES[];
 extern const char* POM_TEXT_SETTINGS_WORK_DURATION[];
 extern const char* POM_TEXT_SETTINGS_REST_DURATION[];
 extern const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[];
+extern const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[];
+extern const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[];

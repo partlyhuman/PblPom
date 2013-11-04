@@ -7,6 +7,8 @@ typedef enum {
     PomMenuWorkDuration,
     PomMenuRestDuration,
     PomMenuVibrateWhileWorking,
+    PomMenuTakeLongRests,
+    PomMenuLongRestDuration,
     PomMenuItemCount
 } PomMenuId; // Aliases for each menu item by index
 
@@ -32,6 +34,9 @@ void pomOnNumberSelect(struct NumberWindow *window, void *context) {
         case PomMenuWorkDuration:
             app.settings.workTicks = ticks;
             break;
+        case PomMenuLongRestDuration:
+            app.settings.longRestTicks = ticks;
+            break;
         default:
             return;
     }
@@ -56,11 +61,22 @@ void pomOnMenuSelect(int index, void *context) {
         case PomMenuVibrateWhileWorking:
             s->vibrateWhileWorking = !s->vibrateWhileWorking;
             break;
+
+        case PomMenuTakeLongRests:
+            s->takeLongRests = !s->takeLongRests;
+            break;
             
         case PomMenuRestDuration:
             number_window_set_value(&durationChooserWindow, s->restTicks/60);
             number_window_set_step_size(&durationChooserWindow, 1);
             number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_REST_DURATION[s->language]);
+            window_stack_push((Window*)&durationChooserWindow, true);
+            break;
+            
+        case PomMenuLongRestDuration:
+            number_window_set_value(&durationChooserWindow, s->longRestTicks/60);
+            number_window_set_step_size(&durationChooserWindow, 1);
+            number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_LONG_REST_DURATION[s->language]);
             window_stack_push((Window*)&durationChooserWindow, true);
             break;
             
@@ -70,6 +86,7 @@ void pomOnMenuSelect(int index, void *context) {
             number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_WORK_DURATION[s->language]);
             window_stack_push((Window*)&durationChooserWindow, true);
             break;
+            
             
         default:
             return;
@@ -82,6 +99,7 @@ void pomUpdateMenus() {
     PomLanguage lang = app.settings.language;
     static char workDurationString[32];
     static char restDurationString[32];
+    static char longRestDurationString[32];
     SimpleMenuItem *m;
     for (PomMenuId id = 0; id < PomMenuItemCount; id++) {
         m = &menuItems[id];
@@ -109,6 +127,16 @@ void pomUpdateMenus() {
                 m->title = POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[lang];
                 m->subtitle = POM_TEXT_BOOLEAN[app.settings.vibrateWhileWorking][lang];
                 break;
+                
+            case PomMenuTakeLongRests:
+                m->title = POM_TEXT_SETTINGS_TAKE_LONG_RESTS[lang];
+                m->subtitle = POM_TEXT_BOOLEAN[app.settings.takeLongRests][lang];
+                break;
+            
+            case PomMenuLongRestDuration:
+                m->title = POM_TEXT_SETTINGS_LONG_REST_DURATION[lang];
+                snprintf(longRestDurationString, ARRAY_LENGTH(longRestDurationString), POM_TEXT_X_MINUTES[lang], app.settings.longRestTicks / 60);
+                m->subtitle = longRestDurationString;
                 
             default:
                 break;
