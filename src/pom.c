@@ -200,9 +200,9 @@ void pomOnInit(AppContextRef ctx) {
     window_stack_push(&app.mainWindow, true);
 
 #if USE_CONSOLE
-    text_layer_init(&__console_layer, GRect(0, 28, 144, 140)); \
-    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap); \
-    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK)); \
+    text_layer_init(&__console_layer, GRect(0, 28, 144, 140));
+    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap);
+    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
     layer_add_child(&app.mainWindow.layer, &__console_layer.layer);
 #endif
 
