@@ -1,16 +1,19 @@
 #include "pebble_os.h"
 #include "pebble_app.h"
 #include "pebble_fonts.h"
+#include "debugging.h"
 #include "pom.h"
 #include "pom_vibes.h"
 #include "pom_text.h"
 #include "pom_menu.h"
+#include "pom_cookies.h"
 
 // constants
-static const GSize FULL_SIZE = {144, 168};
+const GSize FULL_SIZE = {144, 168};
 
 // the common, global app structure
 PomApplication app;
+
 
 // Utilities --------------------------------------------------------------
 
@@ -172,6 +175,15 @@ void pomMainWindowClickProvider(ClickConfig **buttonConfigs, void *context) {
     buttonConfigs[BUTTON_ID_SELECT]->click.handler = pomOnMainWindowSelectClick;
 }
 
+void pomOnDeinit(AppContextRef ctx) {
+}
+
+void pomOnTimer(AppContextRef app_ctx, AppTimerHandle handle, uint32_t timerKey) {
+    //Delayed calling of httpebble stuff, it doesn't like to go on init.
+    CONSOLE("App timer up.");
+    pomLoadCookies();
+}
+
 /** App initialization. */
 void pomOnInit(AppContextRef ctx) {
     window_init(&app.mainWindow, "Pom");
@@ -192,8 +204,16 @@ void pomOnInit(AppContextRef ctx) {
     layer_add_child(&app.mainWindow.layer, &app.inverterLayer.layer);
     window_stack_push(&app.mainWindow, true);
     
-    pomInitMenus();
+#ifdef DEBUG
+    __CONSOLE_INIT
+    layer_add_child(&app.mainWindow.layer, &__console_layer.layer);
+#endif
+    
+    pomInitMenuModule(ctx);
+    pomInitCookiesModule(ctx);
     pomSetState(PomStateReady);
+    
+    app_timer_send_event(ctx, 1000, 0);
 }
 
 //  Pebble Core ------------------------------------------------------------
@@ -213,21 +233,18 @@ void pbl_main(void *params) {
     
     app.completedPoms = 0;
     
-#ifndef RELEASE
-    app.settings.restTicks = 10;
-    app.settings.workTicks = 30;
-#endif
-    
     PebbleAppHandlers handlers = {
         .init_handler = &pomOnInit,
+        .deinit_handler = &pomOnDeinit,
         .tick_info = {
             .tick_handler = &pomOnTick,
             .tick_units = SECOND_UNIT|MINUTE_UNIT,
-        }
+        },
+        .timer_handler = &pomOnTimer,
     };
     app_event_loop(params, &handlers);
 }
 
 #ifndef XCODE
-PBL_APP_INFO(POM_UUID, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
+PBL_APP_INFO(POM_UUID_HTTPEBBLE, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
 #endif

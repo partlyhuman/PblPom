@@ -1,13 +1,9 @@
 #pragma once
 #include "pebble_os.h"
 
+#define POM_UUID_HTTPEBBLE { 0x91, 0x41, 0xB6, 0x28, 0xBC, 0x89, 0x49, 0x8E, 0xB1, 0x47, 0x04, 0x9F, 0x49, 0xC0, 0x99, 0xAD }
 #define POM_UUID { 0x42, 0xB2, 0x76, 0xD7, 0x8F, 0x6F, 0x44, 0x9B, 0x89, 0x03, 0xD1, 0x56, 0xC0, 0xD1, 0xE9, 0xBD }
 #define POM_NAME "PblPom"
-
-#define LOG(...) app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
-#define WARN(...) app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, __VA_ARGS__)
-#define ERROR(...) app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, __VA_ARGS__)
-
 
 typedef enum {
     PomStateReady,
@@ -16,13 +12,13 @@ typedef enum {
 } PomState;
 
 typedef struct {
-    unsigned int language;
-    unsigned int workTicks;
-    unsigned int restTicks;
-    unsigned int longRestTicks;
-    unsigned int pomsPerLongRest;
-    bool takeLongRests;
-    bool vibrateWhileWorking;
+    uint16_t language;
+    uint16_t workTicks;
+    uint16_t restTicks;
+    uint16_t longRestTicks;
+    uint16_t pomsPerLongRest;
+    uint16_t takeLongRests;
+    uint16_t vibrateWhileWorking;
 } PomSettings;
 
 

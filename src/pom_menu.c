@@ -1,6 +1,8 @@
 #include "pom.h"
 #include "pom_menu.h"
 #include "pom_text.h"
+#include "pom_cookies.h"
+#include "debugging.h"
 
 typedef enum {
     PomMenuLanguage = 0,
@@ -152,10 +154,12 @@ void pomOnMenuWindowLoad(struct Window *menuWindowRef) {
 
 /** Window unload handler for settings window. */
 void pomOnMenuWindowUnload(struct Window *menuWindowRef) {
+    CONSOLE("Window poppin'");
+    pomSaveCookies();
 }
 
 /** Initialize everything needed for settings menus. Called by pomOnInit(). */
-void pomInitMenus() {
+void pomInitMenuModule(void *ctx) {
     // setup window with all the settings in it
     window_init(&app.menuWindow, "MENU");
     window_set_fullscreen(&app.menuWindow, true);
