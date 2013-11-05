@@ -3,6 +3,7 @@
 #include "pebble_fonts.h"
 #include "debugging.h"
 #include "pom.h"
+#include "http.h"
 #include "pom_vibes.h"
 #include "pom_text.h"
 #include "pom_menu.h"
@@ -178,12 +179,6 @@ void pomMainWindowClickProvider(ClickConfig **buttonConfigs, void *context) {
 void pomOnDeinit(AppContextRef ctx) {
 }
 
-void pomOnTimer(AppContextRef app_ctx, AppTimerHandle handle, uint32_t timerKey) {
-    //Delayed calling of httpebble stuff, it doesn't like to go on init.
-    CONSOLE("App timer up.");
-    pomLoadCookies();
-}
-
 /** App initialization. */
 void pomOnInit(AppContextRef ctx) {
     window_init(&app.mainWindow, "Pom");
@@ -203,17 +198,19 @@ void pomOnInit(AppContextRef ctx) {
     layer_add_child(&app.mainWindow.layer, &app.timeTextLayer.layer);
     layer_add_child(&app.mainWindow.layer, &app.inverterLayer.layer);
     window_stack_push(&app.mainWindow, true);
-    
-#ifdef DEBUG
-    __CONSOLE_INIT
+
+#if USE_CONSOLE
+    text_layer_init(&__console_layer, GRect(0, 28, 144, 140)); \
+    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap); \
+    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK)); \
     layer_add_child(&app.mainWindow.layer, &__console_layer.layer);
 #endif
-    
+
     pomInitMenuModule(ctx);
     pomInitCookiesModule(ctx);
     pomSetState(PomStateReady);
     
-    app_timer_send_event(ctx, 1000, 0);
+    pomLoadCookies();
 }
 
 //  Pebble Core ------------------------------------------------------------
@@ -240,11 +237,16 @@ void pbl_main(void *params) {
             .tick_handler = &pomOnTick,
             .tick_units = SECOND_UNIT|MINUTE_UNIT,
         },
-        .timer_handler = &pomOnTimer,
+        .messaging_info = {
+            .buffer_sizes = {
+                .inbound = 124,
+                .outbound = 256,
+            }
+        },
     };
     app_event_loop(params, &handlers);
 }
 
 #ifndef XCODE
-PBL_APP_INFO(POM_UUID_HTTPEBBLE, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
+PBL_APP_INFO(HTTP_UUID, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
 #endif

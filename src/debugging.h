@@ -1,24 +1,26 @@
 #pragma once
 #include "pebble_os.h"
 
-void strclear(const char*);
+#define USE_CONSOLE 0
 
-// RELEASE is set by the build script. On debug builds, it simply omits this define.
+// RELEASE is set by the build system (waf configure --debug).
+// On debug builds, it simply omits this define.
+// Use DEBUG as a convenience, but we have to set it here.
 #ifdef RELEASE
-
 #undef DEBUG
 #define LOG(...)
 #define WARN(...)
 #define ERROR(...)
-#define CONSOLE(...)
 
-#else //---------------------------------------------------------------------------
-
+#else
 #define DEBUG 1
 #define LOG(...) app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
 #define WARN(...) app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, __VA_ARGS__)
 #define ERROR(...) app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, __VA_ARGS__)
+#endif
 
+
+#if USE_CONSOLE
 #define __CONSOLE_INCLUDE_LINENO 0
 #define __CONSOLE_BUFFER_SIZE 250
 #define __CONSOLE_LINE_SIZE 64
@@ -36,9 +38,6 @@ extern TextLayer __console_layer;
     __console_buffer[len] = '\n'; \
     text_layer_set_text(&__console_layer, __console_buffer);
 
-#define __CONSOLE_INIT \
-    text_layer_init(&__console_layer, GRect(0, 28, 144, 140)); \
-    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap); \
-    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
-
+#else
+#define CONSOLE LOG
 #endif

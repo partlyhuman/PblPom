@@ -70,21 +70,18 @@ void pomOnMenuSelect(int index, void *context) {
             
         case PomMenuRestDuration:
             number_window_set_value(&durationChooserWindow, s->restTicks/60);
-            number_window_set_step_size(&durationChooserWindow, 1);
             number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_REST_DURATION[s->language]);
             window_stack_push((Window*)&durationChooserWindow, true);
             break;
             
         case PomMenuLongRestDuration:
             number_window_set_value(&durationChooserWindow, s->longRestTicks/60);
-            number_window_set_step_size(&durationChooserWindow, 1);
             number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_LONG_REST_DURATION[s->language]);
             window_stack_push((Window*)&durationChooserWindow, true);
             break;
             
         case PomMenuWorkDuration:
             number_window_set_value(&durationChooserWindow, s->workTicks/60);
-            number_window_set_step_size(&durationChooserWindow, 5);
             number_window_set_label(&durationChooserWindow, POM_TEXT_SETTINGS_WORK_DURATION[s->language]);
             window_stack_push((Window*)&durationChooserWindow, true);
             break;
@@ -154,8 +151,8 @@ void pomOnMenuWindowLoad(struct Window *menuWindowRef) {
 
 /** Window unload handler for settings window. */
 void pomOnMenuWindowUnload(struct Window *menuWindowRef) {
-    CONSOLE("Window poppin'");
     pomSaveCookies();
+    pomSetState(app.state); //redraw in case language changed
 }
 
 /** Initialize everything needed for settings menus. Called by pomOnInit(). */
