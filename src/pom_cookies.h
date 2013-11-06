@@ -1,5 +1,5 @@
-#pragma once
-
-void pomLoadCookies();
-void pomSaveCookies();
-void pomInitCookiesModule(void *);
+//#pragma once
+//
+//void pomLoadCookies();
+//void pomSaveCookies();
+//void pomInitCookiesModule(void *);

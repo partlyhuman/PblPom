@@ -1,13 +1,13 @@
 #include "pebble_os.h"
-#include "pebble_app.h"
+#include "pebble_app_crosscompile.h"
 #include "pebble_fonts.h"
 #include "debugging.h"
 #include "pom.h"
-#include "http.h"
+//#include "http.h"
 #include "pom_vibes.h"
 #include "pom_text.h"
-#include "pom_menu.h"
-#include "pom_cookies.h"
+//#include "pom_menu.h"
+//#include "pom_cookies.h"
 
 // constants
 const GSize FULL_SIZE = {144, 168};
@@ -20,7 +20,7 @@ PomApplication app;
 
 static char gTimeString[6]; // shared time format buffer
 /** Formats a time into MM:SS, e.g. 04:50 */
-inline void formatTime(char* str, int seconds) {
+ void formatTime(char* str, int seconds) {
     if (seconds < 0) seconds = 0;
     snprintf(str, 6, "%02d:%02d", seconds / 60, seconds % 60);
 }
@@ -37,7 +37,7 @@ void pomMoveTextLayers() {
             frame.origin.y = 2;
             layer_set_frame(&app.workingTextLayer.layer, frame);
             frame = app.timeTextLayer.layer.frame;
-            frame.origin.y = 45;
+            frame.origin.y = 50;
             layer_set_frame(&app.timeTextLayer.layer, frame);
             break;
         case PomStateResting:
@@ -52,7 +52,7 @@ void pomMoveTextLayers() {
             break;
     }
     frame = app.timeTextLayer.layer.frame;
-    frame.size.w = (app.state == PomStateReady)? 80 : 30;
+    frame.size.w = (app.state == PomStateReady)? 90 : 40;
     layer_set_frame(&app.timeTextLayer.layer, frame);
 }
 
@@ -161,11 +161,11 @@ void pomOnMainWindowUpOrDownClick(ClickRecognizerRef recognizer, void *context) 
 
 /** Select (middle button) click handler. Launches into settings menu. */
 void pomOnMainWindowSelectClick(ClickRecognizerRef recognizer, void *context) {
-    if (window_stack_contains_window(&app.menuWindow)) {
-        WARN("Window already in window stack");
-        return;
-    }
-    window_stack_push(&app.menuWindow, true);
+//    if (window_stack_contains_window(&app.menuWindow)) {
+//        WARN("Window already in window stack");
+//        return;
+//    }
+//    window_stack_push(&app.menuWindow, true);
 }
 
 /** Set up click handlers on the main window. */
@@ -186,11 +186,11 @@ void pomOnInit(AppContextRef ctx) {
     window_set_background_color(&app.mainWindow, GColorWhite);
     window_set_click_config_provider(&app.mainWindow, pomMainWindowClickProvider);
     
-    text_layer_init(&app.workingTextLayer, GRect(2, 2, FULL_SIZE.w, 50));
-    text_layer_set_font(&app.workingTextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+    text_layer_init(&app.workingTextLayer, GRect(2, 2, FULL_SIZE.w, 60));
+    text_layer_set_font(&app.workingTextLayer, fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
     
-    text_layer_init(&app.timeTextLayer, GRect(4, 45, 80, 30));
-    text_layer_set_font(&app.timeTextLayer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
+    text_layer_init(&app.timeTextLayer, GRect(4, 55, FULL_SIZE.w, 30));
+//    text_layer_set_font(&app.timeTextLayer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
     
     inverter_layer_init(&app.inverterLayer, GRectZero);
     
@@ -200,17 +200,17 @@ void pomOnInit(AppContextRef ctx) {
     window_stack_push(&app.mainWindow, true);
 
 #if USE_CONSOLE
-    text_layer_init(&__console_layer, GRect(0, 28, 144, 140));
-    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap);
-    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
-    layer_add_child(&app.mainWindow.layer, &__console_layer.layer);
+//    text_layer_init(&__console_layer, GRect(0, 28, 144, 140));
+//    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap);
+//    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
+//    layer_add_child(&app.mainWindow.layer, &__console_layer.layer);
 #endif
 
-    pomInitMenuModule(ctx);
-    pomInitCookiesModule(ctx);
+//    pomInitMenuModule(ctx);
+//    pomInitCookiesModule(ctx);
     pomSetState(PomStateReady);
     
-    pomLoadCookies();
+//    pomLoadCookies();
 }
 
 //  Pebble Core ------------------------------------------------------------
@@ -220,8 +220,11 @@ void pbl_main(void *params) {
     // TODO load settings from persistent storage
     app.settings = (PomSettings){
         .language = PomEnglish,
-        .workTicks = 60 * 25,
-        .restTicks = 60 * 5,
+//        .workTicks = 60 * 25,
+//        .restTicks = 60 * 5,
+        .workTicks = 30,
+        .restTicks = 20,
+
         .longRestTicks = 60 * 15,
         .pomsPerLongRest = 4,
         .takeLongRests = true,
@@ -248,5 +251,5 @@ void pbl_main(void *params) {
 }
 
 #ifndef XCODE
-PBL_APP_INFO(HTTP_UUID, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
+PBL_APP_INFO(POM_UUID, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
 #endif

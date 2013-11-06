@@ -1,4 +1,4 @@
-#pragma once
-
-void pomUpdateMenus();
-void pomInitMenuModule(void *);
+//#pragma once
+//
+//void pomUpdateMenus();
+//void pomInitMenuModule(void *);

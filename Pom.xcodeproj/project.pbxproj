@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DB2C21521828E72B0070A581 /* pom_cookies.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2C21501828E72B0070A581 /* pom_cookies.c */; };
 		DB2C2157182915E50070A581 /* debugging.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2C2155182915E50070A581 /* debugging.c */; };
+		DB6454B61829E7B900A04D1A /* http.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6454B31829E7B900A04D1A /* http.c */; };
 		DB6A971018262AED00D8625A /* pom.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A970F18262AED00D8625A /* pom.c */; };
 		DB6A9713182643D000D8625A /* pom_text.c in Sources */ = {isa = PBXBuildFile; fileRef = DB6A9712182643D000D8625A /* pom_text.c */; };
 		DBB3C54C18270C9600634F6A /* pom_menu.c in Sources */ = {isa = PBXBuildFile; fileRef = DBB3C54B18270C9600634F6A /* pom_menu.c */; };
@@ -32,6 +33,9 @@
 		DB2C2155182915E50070A581 /* debugging.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = debugging.c; path = src/debugging.c; sourceTree = "<group>"; };
 		DB2C2156182915E50070A581 /* debugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = debugging.h; path = src/debugging.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DB57D842182648A1005F8827 /* pom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pom.h; path = src/pom.h; sourceTree = "<group>"; };
+		DB6454B31829E7B900A04D1A /* http.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http.c; path = src/http.c; sourceTree = "<group>"; };
+		DB6454B41829E7B900A04D1A /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = src/http.h; sourceTree = "<group>"; };
+		DB6454B51829E7B900A04D1A /* pebble_app_crosscompile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pebble_app_crosscompile.h; path = src/pebble_app_crosscompile.h; sourceTree = "<group>"; };
 		DB64E77F1826F09E002BAC73 /* pom_vibes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pom_vibes.h; path = src/pom_vibes.h; sourceTree = "<group>"; };
 		DB6A970118262A6600D8625A /* Pom */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pom; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB6A970F18262AED00D8625A /* pom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = pom.c; path = src/pom.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
@@ -66,6 +70,9 @@
 				DB64E77F1826F09E002BAC73 /* pom_vibes.h */,
 				DB2C2155182915E50070A581 /* debugging.c */,
 				DB2C2156182915E50070A581 /* debugging.h */,
+				DB6454B31829E7B900A04D1A /* http.c */,
+				DB6454B41829E7B900A04D1A /* http.h */,
+				DB6454B51829E7B900A04D1A /* pebble_app_crosscompile.h */,
 				DB6A970218262A6600D8625A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -134,6 +141,7 @@
 				DB6A971018262AED00D8625A /* pom.c in Sources */,
 				DB2C21521828E72B0070A581 /* pom_cookies.c in Sources */,
 				DBB3C54C18270C9600634F6A /* pom_menu.c in Sources */,
+				DB6454B61829E7B900A04D1A /* http.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

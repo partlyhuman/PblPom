@@ -1,6 +1,9 @@
 #pragma once
 #include "pebble_os.h"
 
+// For simulator - release mode.
+#define RELEASE 1
+
 // RELEASE is set by the build system (waf configure --debug).
 // On debug builds, it simply omits this define.
 // Use DEBUG as a convenience, but we have to set it here.
@@ -12,7 +15,7 @@
 
 #else
 #define DEBUG 1
-#define USE_CONSOLE 1
+#define USE_CONSOLE 0
 #define LOG(...) app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
 #define WARN(...) app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, __VA_ARGS__)
 #define ERROR(...) app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, __VA_ARGS__)
