@@ -3,6 +3,7 @@
 typedef enum {
     PomEnglish = 0,
     PomSpanish,
+    PomGerman,
     PomLanguageCount
 } PomLanguage;
 
