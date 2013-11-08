@@ -1,0 +1,24 @@
+{
+  "uuid": "42b276d7-8f6f-449b-8903-d156c0d1e9bd",
+  "shortName": "PblPom",
+  "longName": "PblPom",
+  "companyName": "Partlyhuman",
+  "versionCode": 2.0,
+  "versionLabel": "2.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+  },
+  "resources": {
+    "media": [
+      {
+        "name": "IMAGE_MENU_ICON",
+        "type": "png",
+        "file": "images/menu_icon.png",
+        "menuIcon": true
+      }
+    ]
+  },
+  "capabilities": []
+}

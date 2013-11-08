@@ -1,9 +1,7 @@
-#include "pebble_os.h"
-#include "pebble_app.h"
-#include "pebble_fonts.h"
+#include <pebble.h>
+#include <pebble_fonts.h>
 #include "debugging.h"
 #include "pom.h"
-#include "http.h"
 #include "pom_vibes.h"
 #include "pom_text.h"
 #include "pom_menu.h"
@@ -33,27 +31,27 @@ void pomMoveTextLayers() {
     switch (app.state) {
         case PomStateWorking:
         case PomStateReady:
-            frame = app.workingTextLayer.layer.frame;
+            frame = layer_get_frame(text_layer_get_layer(app.workingTextLayer));
             frame.origin.y = 2;
-            layer_set_frame(&app.workingTextLayer.layer, frame);
-            frame = app.timeTextLayer.layer.frame;
+            layer_set_frame(text_layer_get_layer(app.workingTextLayer), frame);
+            frame = layer_get_frame(text_layer_get_layer(app.timeTextLayer));
             frame.origin.y = 45;
-            layer_set_frame(&app.timeTextLayer.layer, frame);
+            layer_set_frame(text_layer_get_layer(app.timeTextLayer), frame);
             break;
         case PomStateResting:
-            frame = app.workingTextLayer.layer.frame;
+            frame = layer_get_frame(text_layer_get_layer(app.workingTextLayer));
             frame.origin.y = FULL_SIZE.h - 65 - 2;
-            layer_set_frame(&app.workingTextLayer.layer, frame);
-            frame = app.timeTextLayer.layer.frame;
+            layer_set_frame(text_layer_get_layer(app.workingTextLayer), frame);
+            frame = layer_get_frame(text_layer_get_layer(app.timeTextLayer));
             frame.origin.y = FULL_SIZE.h - 20 - 2;
-            layer_set_frame(&app.timeTextLayer.layer, frame);
+            layer_set_frame(text_layer_get_layer(app.timeTextLayer), frame);
             break;
         default:
             break;
     }
-    frame = app.timeTextLayer.layer.frame;
+    frame = layer_get_frame(text_layer_get_layer(app.timeTextLayer));
     frame.size.w = (app.state == PomStateReady)? 80 : 30;
-    layer_set_frame(&app.timeTextLayer.layer, frame);
+    layer_set_frame(text_layer_get_layer(app.timeTextLayer), frame);
 }
 
 /** Change the state between ready, working, and resting. */
@@ -64,9 +62,9 @@ void pomSetState(PomState newState) {
         case PomStateWorking:
             app.totalTicks = app.ticksRemaining = app.settings.workTicks;
             
-            text_layer_set_text(&app.workingTextLayer, POM_TEXT_WORK[app.settings.language]);
+            text_layer_set_text(app.workingTextLayer, POM_TEXT_WORK[app.settings.language]);
             formatTime(gTimeString, app.settings.workTicks);
-            text_layer_set_text(&app.timeTextLayer, gTimeString);
+            text_layer_set_text(app.timeTextLayer, gTimeString);
             break;
 
         case PomStateResting:
@@ -75,17 +73,17 @@ void pomSetState(PomState newState) {
                 app.ticksRemaining = app.settings.longRestTicks;
             }
 
-            text_layer_set_text(&app.workingTextLayer, POM_TEXT_REST[app.settings.language]);
+            text_layer_set_text(app.workingTextLayer, POM_TEXT_REST[app.settings.language]);
             formatTime(gTimeString, app.settings.restTicks);
-            text_layer_set_text(&app.timeTextLayer, gTimeString);
+            text_layer_set_text(app.timeTextLayer, gTimeString);
             break;
             
         case PomStateReady:
-            layer_set_bounds(&app.inverterLayer.layer, GRectZero);
-            text_layer_set_text(&app.workingTextLayer, POM_TEXT_READY[app.settings.language]);
+            layer_set_bounds(inverter_layer_get_layer(app.inverterLayer), GRectZero);
+            text_layer_set_text(app.workingTextLayer, POM_TEXT_READY[app.settings.language]);
             static char pomCounterString[64];
             snprintf(pomCounterString, ARRAY_LENGTH(pomCounterString), POM_TEXT_POM_COUNTER[app.settings.language], app.completedPoms);
-            text_layer_set_text(&app.timeTextLayer, pomCounterString);
+            text_layer_set_text(app.timeTextLayer, pomCounterString);
             break;
 
         default:
@@ -94,12 +92,11 @@ void pomSetState(PomState newState) {
     }
 
     pomMoveTextLayers();
-    layer_mark_dirty(&app.mainWindow.layer);
-//    layer_set_frame(&app.inverterLayer.layer, GRectZero);
+    layer_mark_dirty(window_get_root_layer(app.mainWindow));
 }
 
 /** Tick handler. Called every second. Also called on the minute for "heartbeat" working reminders. */
-void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
+void pomOnTick(struct tm *tick_time, TimeUnits units_changed) {
     if (app.state == PomStateReady) return;
     app.ticksRemaining--;
     
@@ -127,7 +124,7 @@ void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
     bool isResting = (app.state == PomStateResting);
 
     // heartbeat
-    if (isWorking && app.settings.vibrateWhileWorking && (event->units_changed & MINUTE_UNIT) > 0) {
+    if (isWorking && app.settings.vibrateWhileWorking && (units_changed & MINUTE_UNIT) > 0) {
         vibes_enqueue_custom_pattern(VIBRATE_MINIMAL);
     }
     
@@ -140,14 +137,14 @@ void pomOnTick(AppContextRef ctx, PebbleTickEvent *event) {
     else if (isResting) {
         inverterFrame.size.h = pctRemaining * FULL_SIZE.h;
     }
-    layer_set_frame(&app.inverterLayer.layer, inverterFrame);
+    layer_set_frame(inverter_layer_get_layer(app.inverterLayer), inverterFrame);
     
     // set timer text
     formatTime(gTimeString, app.ticksRemaining);
-    text_layer_set_text(&app.timeTextLayer, gTimeString);
+    text_layer_set_text(app.timeTextLayer, gTimeString);
     
     // redraw!
-    layer_mark_dirty(&app.mainWindow.layer);
+    layer_mark_dirty(window_get_root_layer(app.mainWindow));
 }
 
 /** Handles up or down button click while in main window. Use this click to start or restart a cycle. */
@@ -161,63 +158,24 @@ void pomOnMainWindowUpOrDownClick(ClickRecognizerRef recognizer, void *context) 
 
 /** Select (middle button) click handler. Launches into settings menu. */
 void pomOnMainWindowSelectClick(ClickRecognizerRef recognizer, void *context) {
-    if (window_stack_contains_window(&app.menuWindow)) {
+    if (window_stack_contains_window(app.menuWindow)) {
         WARN("Window already in window stack");
         return;
     }
-    window_stack_push(&app.menuWindow, true);
+    window_stack_push(app.menuWindow, true);
 }
 
 /** Set up click handlers on the main window. */
-void pomMainWindowClickProvider(ClickConfig **buttonConfigs, void *context) {
-    buttonConfigs[BUTTON_ID_UP]->click.handler =
-        buttonConfigs[BUTTON_ID_DOWN]->click.handler =
-        pomOnMainWindowUpOrDownClick;
-    buttonConfigs[BUTTON_ID_SELECT]->click.handler = pomOnMainWindowSelectClick;
-}
-
-void pomOnDeinit(AppContextRef ctx) {
+void pomMainWindowClickProvider(void *context) {
+    window_single_click_subscribe(BUTTON_ID_UP, pomOnMainWindowUpOrDownClick);
+    window_single_click_subscribe(BUTTON_ID_DOWN, pomOnMainWindowUpOrDownClick);
+    window_single_click_subscribe(BUTTON_ID_SELECT, pomOnMainWindowSelectClick);
 }
 
 /** App initialization. */
-void pomOnInit(AppContextRef ctx) {
-    window_init(&app.mainWindow, "Pom");
-    window_set_fullscreen(&app.mainWindow, true);
-    window_set_background_color(&app.mainWindow, GColorWhite);
-    window_set_click_config_provider(&app.mainWindow, pomMainWindowClickProvider);
-    
-    text_layer_init(&app.workingTextLayer, GRect(2, 2, FULL_SIZE.w, 50));
-    text_layer_set_font(&app.workingTextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
-    
-    text_layer_init(&app.timeTextLayer, GRect(4, 45, 80, 30));
-    text_layer_set_font(&app.timeTextLayer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
-    
-    inverter_layer_init(&app.inverterLayer, GRectZero);
-    
-    layer_add_child(&app.mainWindow.layer, &app.workingTextLayer.layer);
-    layer_add_child(&app.mainWindow.layer, &app.timeTextLayer.layer);
-    layer_add_child(&app.mainWindow.layer, &app.inverterLayer.layer);
-    window_stack_push(&app.mainWindow, true);
-
-#if USE_CONSOLE
-    text_layer_init(&__console_layer, GRect(0, 28, 144, 140));
-    text_layer_set_overflow_mode(&__console_layer, GTextOverflowModeWordWrap);
-    text_layer_set_font(&__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
-    layer_add_child(&app.mainWindow.layer, &__console_layer.layer);
-#endif
-
-    pomInitMenuModule(ctx);
-    pomInitCookiesModule(ctx);
-    pomSetState(PomStateReady);
-    
-    pomLoadCookies();
-}
-
-//  Pebble Core ------------------------------------------------------------
-
-void pbl_main(void *params) {
+void pomStartup() {
     // setup default settings
-    // TODO load settings from persistent storage
+    // after, load settings from persistent storage
     app.settings = (PomSettings){
         .language = PomEnglish,
         .workTicks = 60 * 25,
@@ -229,24 +187,49 @@ void pbl_main(void *params) {
     };
     
     app.completedPoms = 0;
+
+    app.mainWindow = window_create();
+    window_set_fullscreen(app.mainWindow, true);
+    window_set_background_color(app.mainWindow, GColorWhite);
+    window_set_click_config_provider(app.mainWindow, pomMainWindowClickProvider);
     
-    PebbleAppHandlers handlers = {
-        .init_handler = &pomOnInit,
-        .deinit_handler = &pomOnDeinit,
-        .tick_info = {
-            .tick_handler = &pomOnTick,
-            .tick_units = SECOND_UNIT|MINUTE_UNIT,
-        },
-        .messaging_info = {
-            .buffer_sizes = {
-                .inbound = 124,
-                .outbound = 256,
-            }
-        },
-    };
-    app_event_loop(params, &handlers);
+    app.workingTextLayer = text_layer_create(GRect(2, 2, FULL_SIZE.w, 50));
+    text_layer_set_font(app.workingTextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+    
+    app.timeTextLayer = text_layer_create(GRect(4, 45, 80, 30));
+    text_layer_set_font(app.timeTextLayer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
+    
+    app.inverterLayer = inverter_layer_create(GRectZero);
+    
+    layer_add_child(window_get_root_layer(app.mainWindow), text_layer_get_layer(app.workingTextLayer));
+    layer_add_child(window_get_root_layer(app.mainWindow), text_layer_get_layer(app.timeTextLayer));
+    layer_add_child(window_get_root_layer(app.mainWindow), inverter_layer_get_layer(app.inverterLayer));
+    window_stack_push(app.mainWindow, true);
+
+#if USE_CONSOLE
+    __console_layer = text_layer_create(GRect(0, 28, 144, 140));
+    text_layer_set_overflow_mode(__console_layer, GTextOverflowModeWordWrap);
+    text_layer_set_font(__console_layer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
+    layer_add_child(window_get_root_layer(app.mainWindow), text_layer_get_layer(__console_layer.layer));
+#endif
+
+    pomInitMenuModule();
+    // pomInitCookiesModule();
+    pomSetState(PomStateReady);
+
+    tick_timer_service_subscribe(SECOND_UNIT|MINUTE_UNIT, pomOnTick);
+    // pomLoadCookies();
 }
 
-#ifndef XCODE
-PBL_APP_INFO(HTTP_UUID, POM_NAME, "Partlyhuman", 1, 0, RESOURCE_ID_IMAGE_MENU_ICON, APP_INFO_STANDARD_APP);
-#endif
+void pomShutdown() {
+    window_destroy(app.mainWindow);
+    window_destroy(app.menuWindow);
+}
+
+//  Pebble Core ------------------------------------------------------------
+
+int main() {
+    pomStartup();
+    app_event_loop();
+    pomShutdown();
+}

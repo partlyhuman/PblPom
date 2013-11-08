@@ -50,11 +50,11 @@ const char* POM_TEXT_SETTINGS_LANGUAGES[] = {
 };
 const char* POM_TEXT_SETTINGS_WORK_DURATION[] = {
     [PomEnglish] = "Work for",
-    [PomSpanish] = "Trabajar para",
+    [PomSpanish] = "Trabajar por",
 };
 const char* POM_TEXT_SETTINGS_REST_DURATION[] = {
     [PomEnglish] = "Rest for",
-    [PomSpanish] = "Descansar para",
+    [PomSpanish] = "Descansar por",
 };
 const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
     [PomEnglish] = "Work ticking",

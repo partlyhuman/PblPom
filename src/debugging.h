@@ -1,5 +1,5 @@
 #pragma once
-#include "pebble_os.h"
+#include <pebble.h>
 
 // RELEASE is set by the build system (waf configure --debug).
 // On debug builds, it simply omits this define.

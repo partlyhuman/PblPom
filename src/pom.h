@@ -1,8 +1,5 @@
 #pragma once
-#include "pebble_os.h"
-
-#define POM_UUID { 0x42, 0xB2, 0x76, 0xD7, 0x8F, 0x6F, 0x44, 0x9B, 0x89, 0x03, 0xD1, 0x56, 0xC0, 0xD1, 0xE9, 0xBD }
-#define POM_NAME "PblPom"
+#include <pebble.h>
 
 typedef enum {
     PomStateReady,
@@ -30,11 +27,11 @@ typedef struct {
     int totalTicks;
     PomState state;
     
-    Window mainWindow;
-    Window menuWindow;
-    TextLayer workingTextLayer;
-    TextLayer timeTextLayer;
-    InverterLayer inverterLayer;
+    Window *mainWindow;
+    Window *menuWindow;
+    TextLayer *workingTextLayer;
+    TextLayer *timeTextLayer;
+    InverterLayer *inverterLayer;
 
 } PomApplication;
 
