@@ -151,7 +151,6 @@ void pomOnMenuWindowLoad(struct Window *menuWindowRef) {
 
 /** Window unload handler for settings window. */
 void pomOnMenuWindowUnload(struct Window *menuWindowRef) {
-    // pomSaveCookies();
     pomSetState(app.state); //redraw in case language changed
 }
 

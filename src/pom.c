@@ -214,14 +214,16 @@ void pomStartup() {
 #endif
 
     pomInitMenuModule();
-    // pomInitCookiesModule();
-    pomSetState(PomStateReady);
+    pomInitCookiesModule();
 
     tick_timer_service_subscribe(SECOND_UNIT|MINUTE_UNIT, pomOnTick);
-    // pomLoadCookies();
+    pomLoadCookies();
+
+    pomSetState(PomStateReady);
 }
 
 void pomShutdown() {
+    pomSaveCookies();
     window_destroy(app.mainWindow);
     window_destroy(app.menuWindow);
 }

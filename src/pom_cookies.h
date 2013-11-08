@@ -1,5 +1,6 @@
-// #pragma once
+#pragma once
+#include <pebble.h>
 
-// void pomLoadCookies();
-// void pomSaveCookies();
-// void pomInitCookiesModule(void *);
+bool pomLoadCookies();
+void pomSaveCookies();
+void pomInitCookiesModule();
