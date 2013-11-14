@@ -24,7 +24,7 @@ const char* POM_TEXT_POM_COUNTER[] = {
     [PomEnglish] = "Completed %d",
     [PomSpanish] = "Completado %d",
     [PomGerman] = "Erledigt %d",
-    [PomRussian] = "Завршено %d",
+    [PomRussian] = "Завершено %d",
 };
 
 // Reusable text
