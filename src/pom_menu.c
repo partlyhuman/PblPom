@@ -11,6 +11,7 @@ typedef enum {
     PomMenuVibrateWhileWorking,
     PomMenuTakeLongRests,
     PomMenuLongRestDuration,
+    PomMenuShowClock,
     PomMenuItemCount
 } PomMenuId; // Aliases for each menu item by index
 
@@ -68,6 +69,10 @@ void pomOnMenuSelect(int index, void *context) {
             s->takeLongRests = !s->takeLongRests;
             break;
             
+        case PomMenuShowClock:
+            s->showClock = !s->showClock;
+            break;
+            
         case PomMenuRestDuration:
             number_window_set_value(durationChooserWindow, s->restTicks/60);
             number_window_set_label(durationChooserWindow, POM_TEXT_SETTINGS_REST_DURATION[s->language]);
@@ -85,7 +90,6 @@ void pomOnMenuSelect(int index, void *context) {
             number_window_set_label(durationChooserWindow, POM_TEXT_SETTINGS_WORK_DURATION[s->language]);
             window_stack_push((Window *)durationChooserWindow, true);
             break;
-            
             
         default:
             return;
@@ -110,9 +114,7 @@ void pomUpdateMenus() {
                 
             case PomMenuWorkDuration:
                 m->title = POM_TEXT_SETTINGS_WORK_DURATION[lang];
-                LOG(workDurationString);
                 snprintf(workDurationString, ARRAY_LENGTH(workDurationString), POM_TEXT_X_MINUTES[lang], app.settings.workTicks / 60);
-                LOG(workDurationString);
                 m->subtitle = workDurationString;
                 break;
                 
@@ -136,6 +138,12 @@ void pomUpdateMenus() {
                 m->title = POM_TEXT_SETTINGS_LONG_REST_DURATION[lang];
                 snprintf(longRestDurationString, ARRAY_LENGTH(longRestDurationString), POM_TEXT_X_MINUTES[lang], app.settings.longRestTicks / 60);
                 m->subtitle = longRestDurationString;
+                break;
+                
+            case PomMenuShowClock:
+                m->title = POM_TEXT_SETTINGS_SHOW_CLOCK[lang];
+                m->subtitle = POM_TEXT_BOOLEAN[app.settings.showClock][lang];
+                break;
                 
             default:
                 break;

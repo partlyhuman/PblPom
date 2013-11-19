@@ -7,12 +7,10 @@
 #include "pom_menu.h"
 #include "pom_cookies.h"
 
-// constants
-const GSize FULL_SIZE = {144, 168};
-
 // the common, global app structure
 PomApplication app;
 
+GSize windowSize = {144, 168};
 
 // Utilities --------------------------------------------------------------
 
@@ -40,10 +38,10 @@ void pomMoveTextLayers() {
             break;
         case PomStateResting:
             frame = layer_get_frame(text_layer_get_layer(app.workingTextLayer));
-            frame.origin.y = FULL_SIZE.h - 65 - 2;
+            frame.origin.y = windowSize.h - 65 - 2;
             layer_set_frame(text_layer_get_layer(app.workingTextLayer), frame);
             frame = layer_get_frame(text_layer_get_layer(app.timeTextLayer));
-            frame.origin.y = FULL_SIZE.h - 20 - 2;
+            frame.origin.y = windowSize.h - 20 - 2;
             layer_set_frame(text_layer_get_layer(app.timeTextLayer), frame);
             break;
         default:
@@ -57,7 +55,12 @@ void pomMoveTextLayers() {
 /** Change the state between ready, working, and resting. */
 void pomSetState(PomState newState) {
     app.state = newState;
-
+    
+    // recalculate window size
+    window_set_fullscreen(app.mainWindow, !app.settings.showClock);
+    layer_mark_dirty(window_get_root_layer(app.mainWindow));
+    windowSize = layer_get_frame(window_get_root_layer(app.mainWindow)).size;
+    
     switch (newState) {
         case PomStateWorking:
             app.totalTicks = app.ticksRemaining = app.settings.workTicks;
@@ -90,7 +93,7 @@ void pomSetState(PomState newState) {
             WARN("Unhandled state change %d", newState);
             break;
     }
-
+    
     pomMoveTextLayers();
     layer_mark_dirty(window_get_root_layer(app.mainWindow));
 }
@@ -130,12 +133,12 @@ void pomOnTick(struct tm *tick_time, TimeUnits units_changed) {
     
     // resize inverter
     float pctRemaining = (app.ticksRemaining + 0.0) / app.totalTicks;
-    GRect inverterFrame = GRect(0, 0, FULL_SIZE.w, 0);
+    GRect inverterFrame = GRect(0, 0, windowSize.w, 0);
     if (isWorking) {
-        inverterFrame.size.h = (1.0 - pctRemaining) * FULL_SIZE.h;
+        inverterFrame.size.h = (1.0 - pctRemaining) * windowSize.h;
     }
     else if (isResting) {
-        inverterFrame.size.h = pctRemaining * FULL_SIZE.h;
+        inverterFrame.size.h = pctRemaining * windowSize.h;
     }
     layer_set_frame(inverter_layer_get_layer(app.inverterLayer), inverterFrame);
     
@@ -184,27 +187,28 @@ void pomStartup() {
         .pomsPerLongRest = 4,
         .takeLongRests = true,
         .vibrateWhileWorking = true,
+        .showClock = false,
     };
     
     app.completedPoms = 0;
 
     app.mainWindow = window_create();
-    window_set_fullscreen(app.mainWindow, true);
     window_set_background_color(app.mainWindow, GColorWhite);
     window_set_click_config_provider(app.mainWindow, pomMainWindowClickProvider);
     
-    app.workingTextLayer = text_layer_create(GRect(2, 2, FULL_SIZE.w, 50));
+    app.workingTextLayer = text_layer_create(GRect(2, 2, windowSize.w, 50));
     text_layer_set_font(app.workingTextLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+    text_layer_set_background_color(app.workingTextLayer, GColorClear);
     
     app.timeTextLayer = text_layer_create(GRect(4, 45, 80, 30));
     text_layer_set_font(app.timeTextLayer, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
+    text_layer_set_background_color(app.timeTextLayer, GColorClear);
     
     app.inverterLayer = inverter_layer_create(GRectZero);
     
     layer_add_child(window_get_root_layer(app.mainWindow), text_layer_get_layer(app.workingTextLayer));
     layer_add_child(window_get_root_layer(app.mainWindow), text_layer_get_layer(app.timeTextLayer));
     layer_add_child(window_get_root_layer(app.mainWindow), inverter_layer_get_layer(app.inverterLayer));
-    window_stack_push(app.mainWindow, true);
 
 #if USE_CONSOLE
     __console_layer = text_layer_create(GRect(0, 28, 144, 140));
@@ -220,6 +224,7 @@ void pomStartup() {
     pomLoadCookies();
 
     pomSetState(PomStateReady);
+    window_stack_push(app.mainWindow, true);
 }
 
 void pomShutdown() {

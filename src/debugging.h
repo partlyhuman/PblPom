@@ -12,7 +12,7 @@
 
 #else
 #define DEBUG 1
-#define USE_CONSOLE 1
+#define USE_CONSOLE 0
 #define LOG(...) app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
 #define WARN(...) app_log(APP_LOG_LEVEL_WARNING, __FILE__, __LINE__, __VA_ARGS__)
 #define ERROR(...) app_log(APP_LOG_LEVEL_ERROR, __FILE__, __LINE__, __VA_ARGS__)

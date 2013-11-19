@@ -212,8 +212,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = "XCODE=1";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					include/,
+				);
 				PRODUCT_NAME = Pom;
-				USER_HEADER_SEARCH_PATHS = include/;
 			};
 			name = Debug;
 		};
@@ -224,8 +228,12 @@
 					"XCODE=1",
 					"RELEASE=1",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					include/,
+				);
 				PRODUCT_NAME = Pom;
-				USER_HEADER_SEARCH_PATHS = include/;
 			};
 			name = Release;
 		};

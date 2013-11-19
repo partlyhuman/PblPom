@@ -110,4 +110,11 @@ const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[] = {
     [PomGerman] = "Lange Pausendauer",
     [PomRussian] = "Длина длинной паузы",
 };
+const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
+    [PomEnglish] = "Show Clock",
+    [PomSpanish] = "Mostrar el reloj",
+    [PomFrench] = "Montrer horloge",
+    [PomGerman] = "zeigen Uhr",
+    [PomRussian] = "показывать время",
+};
 

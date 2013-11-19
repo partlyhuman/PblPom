@@ -15,6 +15,7 @@ typedef struct {
     uint16_t pomsPerLongRest;
     bool takeLongRests;
     bool vibrateWhileWorking;
+    bool showClock;
 } PomSettings;
 
 
