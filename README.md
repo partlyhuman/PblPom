@@ -16,6 +16,7 @@ your language for every text key in `pom_text.c`. Submit a pull request.
 
 ## Changelog
 
+ * 2.3 - Added setting to show system clock.
  * 2.2 - Added French translation.
  * 2.1 - Updated to use Pebble SDK Beta 2. Added Russian translation.
  * 2.0 - Updated to use Pebble SDK version 2.0. httpebble no longer required, settings are stored on phone. A branch will be created for legacy-sdk-1.0.
