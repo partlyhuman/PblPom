@@ -7,6 +7,7 @@ const char* POM_TEXT_WORK[] = {
     [PomSpanish] = "trabajo",
     [PomFrench] = "travail",
     [PomGerman] = "Arbeit",
+    [PomSwedish] = "jobb",
     [PomRussian] = "работа",    
 };
 const char* POM_TEXT_REST[] = {
@@ -14,6 +15,7 @@ const char* POM_TEXT_REST[] = {
     [PomSpanish] = "reposo",
     [PomFrench] = "pause",
     [PomGerman] = "Pause",
+    [PomSwedish] = "paus",
     [PomRussian] = "отдых",
 };
 const char* POM_TEXT_READY[] = {
@@ -21,6 +23,7 @@ const char* POM_TEXT_READY[] = {
     [PomSpanish] = "listo",
     [PomFrench] = "prêt",
     [PomGerman] = "bereit",
+    [PomSwedish] = "redo",
     [PomRussian] = "готово",
 };
 const char* POM_TEXT_POM_COUNTER[] = {
@@ -28,6 +31,7 @@ const char* POM_TEXT_POM_COUNTER[] = {
     [PomSpanish] = "Completado %d",
     [PomFrench] = "Réalisé %d",
     [PomGerman] = "Erledigt %d",
+    [PomSwedish] = "Genomfört %d",
     [PomRussian] = "Завершено %d",
 };
 
@@ -38,6 +42,7 @@ const char* POM_TEXT_YES[] = {
     [PomSpanish] = "Sí",
     [PomFrench] = "Oui",
     [PomGerman] = "Ja",
+    [PomSwedish] = "Ja",
     [PomRussian] = "Да",
 };
 const char* POM_TEXT_NO[] = {
@@ -45,6 +50,7 @@ const char* POM_TEXT_NO[] = {
     [PomSpanish] = "No",
     [PomFrench] = "Non",
     [PomGerman] = "Nein",
+    [PomSwedish] = "Nej",    
     [PomRussian] = "Нет",
 };
 const char** POM_TEXT_BOOLEAN[2] = {
@@ -56,6 +62,7 @@ const char* POM_TEXT_X_MINUTES[] = {
     [PomSpanish] = "%d min",
     [PomFrench] = "%d min",
     [PomGerman] = "%d min",
+    [PomSwedish] = "%d min",
     [PomRussian] = "%d мин",
 };
 
@@ -66,6 +73,7 @@ const char* POM_TEXT_SETTINGS_LANGUAGE[] = {
     [PomSpanish] = "Idioma",
     [PomFrench] = "Langues",
     [PomGerman] = "Sprache",
+    [PomSwedish] = "Språk",    
     [PomRussian] = "Язык",
 };
 const char* POM_TEXT_SETTINGS_LANGUAGES[] = {
@@ -73,6 +81,7 @@ const char* POM_TEXT_SETTINGS_LANGUAGES[] = {
     [PomSpanish] = "Español",
     [PomFrench] = "Français",
     [PomGerman] = "Deutsch",
+    [PomSwedish] = "Svenska",
     [PomRussian] = "Русский",
 };
 const char* POM_TEXT_SETTINGS_WORK_DURATION[] = {
@@ -80,6 +89,7 @@ const char* POM_TEXT_SETTINGS_WORK_DURATION[] = {
     [PomSpanish] = "Trabajar por",
     [PomFrench] = "Temps de travail",
     [PomGerman] = "Arbeitsdauer",
+    [PomSwedish] = "Minuter jobb",
     [PomRussian] = "Время работы",
 };
 const char* POM_TEXT_SETTINGS_REST_DURATION[] = {
@@ -87,6 +97,7 @@ const char* POM_TEXT_SETTINGS_REST_DURATION[] = {
     [PomSpanish] = "Descansar por",
     [PomFrench] = "Temps de pause",
     [PomGerman] = "Pausendauer",
+    [PomSwedish] = "Minuter paus",
     [PomRussian] = "Время отдыха",
 };
 const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
@@ -94,6 +105,7 @@ const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
     [PomSpanish] = "Terliz",
     [PomFrench] = "Vibrations",
     [PomGerman] = "Arbeit läuft",
+    [PomSwedish] = "Minutvibrationer",    
     [PomRussian] = "Вибрация работы",
 };
 const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[] = {
@@ -101,6 +113,7 @@ const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[] = {
     [PomSpanish] = "Tomar recesos",
     [PomFrench] = "Longues pauses",
     [PomGerman] = "Pausen machen",
+    [PomSwedish] = "Ta lång paus",
     [PomRussian] = "Длинные паузы",
 };
 const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[] = {
@@ -108,6 +121,7 @@ const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[] = {
     [PomSpanish] = "Receso durante",
     [PomFrench] = "Durée long. pauses",
     [PomGerman] = "Lange Pausendauer",
+    [PomSwedish] = "Minuter lång paus",    
     [PomRussian] = "Длина длинной паузы",
 };
 const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
@@ -115,6 +129,7 @@ const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
     [PomSpanish] = "Mostrar el reloj",
     [PomFrench] = "Montrer horloge",
     [PomGerman] = "zeigen Uhr",
+    [PomSwedish] = "Visa klockan",
     [PomRussian] = "показывать время",
 };
 
