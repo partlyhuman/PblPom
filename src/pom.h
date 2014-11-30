@@ -13,9 +13,12 @@ typedef struct {
     uint16_t restTicks;
     uint16_t longRestTicks;
     uint16_t pomsPerLongRest;
+    uint16_t vibrateTicks;
     bool takeLongRests;
     bool vibrateWhileWorking;
     bool showClock;
+    bool autoAdvance;
+    bool annoyAfterRestExceeded;
 } PomSettings;
 
 

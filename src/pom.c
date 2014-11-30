@@ -72,8 +72,9 @@ void pomSetState(PomState newState) {
 
         case PomStateResting:
             app.totalTicks = app.ticksRemaining = app.settings.restTicks;
-            if (app.settings.takeLongRests && (app.completedPoms % app.settings.pomsPerLongRest == 0)) {
-                app.ticksRemaining = app.settings.longRestTicks;
+            //Take recess / long rest
+            if (app.settings.takeLongRests && (app.completedPoms % app.settings.pomsPerLongRest) == 0) {
+                app.totalTicks = app.ticksRemaining = app.settings.longRestTicks;
             }
 
             text_layer_set_text(app.workingTextLayer, POM_TEXT_REST[app.settings.language]);
@@ -127,7 +128,7 @@ void pomOnTick(struct tm *tick_time, TimeUnits units_changed) {
     bool isResting = (app.state == PomStateResting);
 
     // heartbeat
-    if (isWorking && app.settings.vibrateWhileWorking && (units_changed & MINUTE_UNIT) > 0) {
+    if (isWorking && app.settings.vibrateWhileWorking && (app.ticksRemaining % app.settings.vibrateTicks) == 0) {
         vibes_enqueue_custom_pattern(VIBRATE_MINIMAL);
     }
     
@@ -179,17 +180,21 @@ void pomMainWindowClickProvider(void *context) {
 void pomStartup() {
     // setup default settings
     // after, load settings from persistent storage
-    app.settings = (PomSettings){
+    PomSettings defaultSettings = (PomSettings){
         .language = PomEnglish,
         .workTicks = 60 * 25,
         .restTicks = 60 * 5,
         .longRestTicks = 60 * 15,
         .pomsPerLongRest = 4,
+        .vibrateTicks = 10,
         .takeLongRests = true,
         .vibrateWhileWorking = true,
         .showClock = false,
+        .autoAdvance = false,
+        .annoyAfterRestExceeded = false,
     };
-    
+
+    app.settings = defaultSettings;
     app.completedPoms = 0;
 
     app.mainWindow = window_create();
@@ -219,9 +224,12 @@ void pomStartup() {
 
     pomInitMenuModule();
     pomInitCookiesModule();
-
+    
     tick_timer_service_subscribe(SECOND_UNIT|MINUTE_UNIT, pomOnTick);
-    pomLoadCookies();
+    if (!pomLoadCookies()) {
+        LOG("Settings not found, using defaults");
+        app.settings = defaultSettings;
+    }
 
     pomSetState(PomStateReady);
     window_stack_push(app.mainWindow, true);

@@ -4,3 +4,4 @@
 bool pomLoadCookies();
 void pomSaveCookies();
 void pomInitCookiesModule();
+void pomClearCookies();
