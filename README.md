@@ -7,15 +7,15 @@ disturbing others, or having it drowned out by your music.
 
 ![Screencap](http://f.cl.ly/items/1d3y452F1j1F2i0L3P0x/capture-fast.gif "Simulated image - looks different on phone")
 
-Current languages include English, Spanish, French, German, and Russian†.
+Current languages include English, Spanish, French, and German.
 We are looking for translators. Adding a language is easy! Fork the repository,
 add your language to the `PomLanguage` enum in `pom_text.h`, and add an entry in
 your language for every text key in `pom_text.c`. Submit a pull request.
 
-† Displaying Russian requires [custom firmware](http://forums.getpebble.com/discussion/4738/pebble-in-russian-beta1/).
-
 ## Changelog
 
+ * 2.7 - Adding several new settings including auto-advance, tick frequency, long break frequency, bug fixes
+ * 2.4, 2.5, 2.6 - Bug fixes for new firmwares
  * 2.3 - Added setting to show system clock.
  * 2.2 - Added French translation.
  * 2.1 - Updated to use Pebble SDK Beta 2. Added Russian translation.
@@ -24,7 +24,7 @@ your language for every text key in `pom_text.c`. Submit a pull request.
 
 ## Extremely serious business
 
-The "Pomodoro Technique®" and "Pomodoro®" are registered trademarks of 
+The "Pomodoro Technique®" and "Pomodoro®" are registered trademarks of
 Francesco Cirillo. We have no relationship with, nor do we endorse, these
 marks, their owner, or the company FC Garage.
 
