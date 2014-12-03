@@ -78,7 +78,7 @@ void pomSetState(PomState newState) {
             }
 
             text_layer_set_text(app.workingTextLayer, POM_TEXT_REST[app.settings.language]);
-            formatTime(gTimeString, app.settings.restTicks);
+            formatTime(gTimeString, app.ticksRemaining);
             text_layer_set_text(app.timeTextLayer, gTimeString);
             break;
             
@@ -225,7 +225,7 @@ void pomStartup() {
     pomInitMenuModule();
     pomInitCookiesModule();
     
-    tick_timer_service_subscribe(SECOND_UNIT|MINUTE_UNIT, pomOnTick);
+    tick_timer_service_subscribe(SECOND_UNIT, pomOnTick);
     if (!pomLoadCookies()) {
         LOG("Settings not found, using defaults");
         app.settings = defaultSettings;
