@@ -26,3 +26,4 @@ extern const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[];
 extern const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[];
 extern const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[];
 extern const char* POM_TEXT_SETTINGS_SHOW_CLOCK[];
+extern const char* POM_TEXT_SETTINGS_AUTO_CONTINUE[];

@@ -119,7 +119,7 @@ void pomOnTick(struct tm *tick_time, TimeUnits units_changed) {
             // time to start another pomodoro.
             vibes_enqueue_custom_pattern(VIBRATE_DIT_DIT_DAH);
             light_enable_interaction();
-            pomSetState(PomStateReady);
+            pomSetState(app.settings.autoContinue? PomStateWorking : PomStateReady);
             return;
         }
     }
@@ -190,7 +190,7 @@ void pomStartup() {
         .takeLongRests = true,
         .vibrateWhileWorking = true,
         .showClock = false,
-        .autoAdvance = false,
+        .autoContinue = false,
         .annoyAfterRestExceeded = false,
     };
 

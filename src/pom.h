@@ -17,7 +17,7 @@ typedef struct {
     bool takeLongRests;
     bool vibrateWhileWorking;
     bool showClock;
-    bool autoAdvance;
+    bool autoContinue;
     bool annoyAfterRestExceeded;
 } PomSettings;
 

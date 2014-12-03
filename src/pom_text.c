@@ -79,7 +79,7 @@ const char* POM_TEXT_SETTINGS_REST_DURATION[] = {
     [PomGerman] = "Pausendauer",
 };
 const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
-    [PomEnglish] = "Work ticking",
+    [PomEnglish] = "Tick while working",
     [PomSpanish] = "Terliz",
     [PomFrench] = "Vibrations",
     [PomGerman] = "Arbeit läuft",
@@ -101,5 +101,11 @@ const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
     [PomSpanish] = "Mostrar el reloj",
     [PomFrench] = "Montrer horloge",
     [PomGerman] = "zeigen Uhr",
+};
+const char* POM_TEXT_SETTINGS_AUTO_CONTINUE[] = {
+    [PomEnglish] = "Auto start next",
+    [PomSpanish] = "Auto Start Next Session", //TODO needs translation
+    [PomFrench] = "Auto Start Next Session", //TODO needs translation
+    [PomGerman] = "Auto Start Next Session", //TODO needs translation
 };
 

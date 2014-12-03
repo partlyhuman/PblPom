@@ -12,6 +12,7 @@ typedef enum {
     PomMenuTakeLongRests,
     PomMenuLongRestDuration,
     PomMenuShowClock,
+    PomMenuAutoContinue,
     PomMenuItemCount
 } PomMenuId; // Aliases for each menu item by index
 
@@ -91,6 +92,10 @@ void pomOnMenuSelect(int index, void *context) {
             window_stack_push((Window *)durationChooserWindow, true);
             break;
             
+        case PomMenuAutoContinue:
+            s->autoContinue = !s->autoContinue;
+            break;
+            
         default:
             return;
     }
@@ -143,6 +148,11 @@ void pomUpdateMenus() {
             case PomMenuShowClock:
                 m->title = POM_TEXT_SETTINGS_SHOW_CLOCK[lang];
                 m->subtitle = POM_TEXT_BOOLEAN[app.settings.showClock][lang];
+                break;
+                
+            case PomMenuAutoContinue:
+                m->title = POM_TEXT_SETTINGS_AUTO_CONTINUE[lang];
+                m->subtitle = POM_TEXT_BOOLEAN[app.settings.autoContinue][lang];
                 break;
                 
             default:
