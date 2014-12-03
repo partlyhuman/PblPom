@@ -108,6 +108,12 @@ const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[] = {
     [PomFrench] = "Durée long. pauses",
     [PomGerman] = "Lange Pausendauer",
 };
+const char* POM_TEXT_SETTINGS_LONG_REST_RATIO[] = {
+    [PomEnglish] = "Recess after every",
+    [PomSpanish] = "Recess after every", //TODO needs translation
+    [PomFrench] = "Recess after every", //TODO needs translation
+    [PomGerman] = "Recess after every", //TODO needs translation
+};
 const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
     [PomEnglish] = "Show Clock",
     [PomSpanish] = "Mostrar el reloj",

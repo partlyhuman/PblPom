@@ -12,6 +12,7 @@ typedef enum {
     PomMenuVibrateFrequency,
     PomMenuTakeLongRests,
     PomMenuLongRestDuration,
+    PomMenuLongRestRatio,
     PomMenuShowClock,
     PomMenuAutoContinue,
     PomMenuItemCount
@@ -22,11 +23,11 @@ static SimpleMenuItem menuItems[PomMenuItemCount];
 static SimpleMenuSection menuSectionRoot;
 static SimpleMenuSection menuSectionsAll[1];
 
-static NumberWindow *durationChooserWindow;
+static NumberWindow *numberChooserWindow;
 
 static const int VIBRATE_TICK_OPTIONS[] = {1, 2, 5, 10, 15, 30, 60, 120};
 
-int indexOf(int toFind, const int array[], uint16_t length) {
+static int indexOf(int toFind, const int array[], uint16_t length) {
     for(uint16_t i = 0; i < length; i++) {
         if (toFind == array[i]) {
             return i;
@@ -53,6 +54,9 @@ void pomOnNumberSelect(struct NumberWindow *window, void *context) {
         case PomMenuLongRestDuration:
             app.settings.longRestTicks = ticks;
             break;
+        case PomMenuLongRestRatio:
+            app.settings.pomsPerLongRest = value;
+            break;
         default:
             return;
     }
@@ -75,16 +79,18 @@ void pomOnMenuSelect(int index, void *context) {
             }
             break;
         
-        case PomMenuVibrateWhileWorking:
-            s->vibrateWhileWorking = !s->vibrateWhileWorking;
-            break;
-
         case PomMenuVibrateFrequency:
             temp = indexOf(s->vibrateTicks, VIBRATE_TICK_OPTIONS, ARRAY_LENGTH(VIBRATE_TICK_OPTIONS));
             temp = (temp + 1) % ARRAY_LENGTH(VIBRATE_TICK_OPTIONS);
             s->vibrateTicks = VIBRATE_TICK_OPTIONS[temp];
             break;
             
+        //boolean toggles
+
+        case PomMenuVibrateWhileWorking:
+            s->vibrateWhileWorking = !s->vibrateWhileWorking;
+            break;
+    
         case PomMenuTakeLongRests:
             s->takeLongRests = !s->takeLongRests;
             break;
@@ -92,27 +98,43 @@ void pomOnMenuSelect(int index, void *context) {
         case PomMenuShowClock:
             s->showClock = !s->showClock;
             break;
+
+        case PomMenuAutoContinue:
+            s->autoContinue = !s->autoContinue;
+            break;
             
+        //number pickers
+
         case PomMenuRestDuration:
-            number_window_set_value(durationChooserWindow, s->restTicks/60);
-            number_window_set_label(durationChooserWindow, POM_TEXT_SETTINGS_REST_DURATION[s->language]);
-            window_stack_push((Window *)durationChooserWindow, true);
+            number_window_set_value(numberChooserWindow, s->restTicks/60);
+            number_window_set_label(numberChooserWindow, POM_TEXT_SETTINGS_REST_DURATION[s->language]);
+            number_window_set_min(numberChooserWindow, 1);
+            number_window_set_max(numberChooserWindow, 60);
+            window_stack_push((Window *)numberChooserWindow, true);
             break;
             
         case PomMenuLongRestDuration:
-            number_window_set_value(durationChooserWindow, s->longRestTicks/60);
-            number_window_set_label(durationChooserWindow, POM_TEXT_SETTINGS_LONG_REST_DURATION[s->language]);
-            window_stack_push((Window *)durationChooserWindow, true);
+            number_window_set_value(numberChooserWindow, s->longRestTicks/60);
+            number_window_set_label(numberChooserWindow, POM_TEXT_SETTINGS_LONG_REST_DURATION[s->language]);
+            number_window_set_min(numberChooserWindow, 1);
+            number_window_set_max(numberChooserWindow, 120);
+            window_stack_push((Window *)numberChooserWindow, true);
             break;
             
         case PomMenuWorkDuration:
-            number_window_set_value(durationChooserWindow, s->workTicks/60);
-            number_window_set_label(durationChooserWindow, POM_TEXT_SETTINGS_WORK_DURATION[s->language]);
-            window_stack_push((Window *)durationChooserWindow, true);
+            number_window_set_value(numberChooserWindow, s->workTicks/60);
+            number_window_set_label(numberChooserWindow, POM_TEXT_SETTINGS_WORK_DURATION[s->language]);
+            number_window_set_min(numberChooserWindow, 1);
+            number_window_set_max(numberChooserWindow, 120);
+            window_stack_push((Window *)numberChooserWindow, true);
             break;
-            
-        case PomMenuAutoContinue:
-            s->autoContinue = !s->autoContinue;
+        
+        case PomMenuLongRestRatio:
+            number_window_set_value(numberChooserWindow, s->pomsPerLongRest);
+            number_window_set_label(numberChooserWindow, POM_TEXT_SETTINGS_LONG_REST_RATIO[s->language]);
+            number_window_set_min(numberChooserWindow, 2);
+            number_window_set_max(numberChooserWindow, 10);
+            window_stack_push((Window *)numberChooserWindow, true);
             break;
             
         default:
@@ -124,10 +146,11 @@ void pomOnMenuSelect(int index, void *context) {
 /** Refreshes values expressed in the settings menu. */
 void pomUpdateMenus() {
     PomLanguage lang = app.settings.language;
-    static char workDurationString[32];
-    static char restDurationString[32];
-    static char longRestDurationString[32];
-    static char tickFrequencyString[32];
+    static char workDurationString[16];
+    static char restDurationString[16];
+    static char longRestDurationString[16];
+    static char longRestRatioString[16];
+    static char tickFrequencyString[16];
     SimpleMenuItem *m;
     for (PomMenuId id = 0; id < PomMenuItemCount; id++) {
         m = &menuItems[id];
@@ -169,6 +192,12 @@ void pomUpdateMenus() {
                 m->title = POM_TEXT_SETTINGS_LONG_REST_DURATION[lang];
                 snprintf(longRestDurationString, ARRAY_LENGTH(longRestDurationString), POM_TEXT_X_MINUTES[lang], app.settings.longRestTicks / 60);
                 m->subtitle = longRestDurationString;
+                break;
+
+            case PomMenuLongRestRatio:
+                m->title = POM_TEXT_SETTINGS_LONG_REST_RATIO[lang];
+                snprintf(longRestRatioString, ARRAY_LENGTH(longRestRatioString), "%d", app.settings.pomsPerLongRest);
+                m->subtitle = longRestRatioString;
                 break;
                 
             case PomMenuShowClock:
@@ -229,8 +258,6 @@ void pomInitMenuModule() {
     layer_add_child(window_get_root_layer(app.menuWindow), simple_menu_layer_get_layer(menuLayer));
 
     // setup number picker window, used when you edit a duration value
-    durationChooserWindow = number_window_create("Duration", (NumberWindowCallbacks){.selected = pomOnNumberSelect}, NULL);
-    number_window_set_min(durationChooserWindow, 1);
-    number_window_set_max(durationChooserWindow, 60);
-    number_window_set_step_size(durationChooserWindow, 1);
+    numberChooserWindow = number_window_create("Duration", (NumberWindowCallbacks){.selected = pomOnNumberSelect}, NULL);
+    number_window_set_step_size(numberChooserWindow, 1);
 }
