@@ -49,7 +49,13 @@ const char* POM_TEXT_X_MINUTES[] = {
     [PomEnglish] = "%d min",
     [PomSpanish] = "%d min",
     [PomFrench] = "%d min",
-    [PomGerman] = "%d min",
+    [PomGerman] = "%d Min",
+};
+const char* POM_TEXT_X_SECONDS[] = {
+    [PomEnglish] = "%d sec",
+    [PomSpanish] = "%d sec",
+    [PomFrench] = "%d sec",
+    [PomGerman] = "%d Sek",
 };
 
 // Settings titles
@@ -83,6 +89,12 @@ const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
     [PomSpanish] = "Terliz",
     [PomFrench] = "Vibrations",
     [PomGerman] = "Arbeit läuft",
+};
+const char* POM_TEXT_SETTINGS_VIBRATE_FREQUENCY[] = {
+    [PomEnglish] = "Tick every",
+    [PomSpanish] = "Tick every", //TODO needs translation
+    [PomFrench] = "Tick every", //TODO needs translation
+    [PomGerman] = "Tick every", //TODO needs translation
 };
 const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[] = {
     [PomEnglish] = "Take recesses",

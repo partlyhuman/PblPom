@@ -9,6 +9,7 @@ typedef enum {
     PomMenuWorkDuration,
     PomMenuRestDuration,
     PomMenuVibrateWhileWorking,
+    PomMenuVibrateFrequency,
     PomMenuTakeLongRests,
     PomMenuLongRestDuration,
     PomMenuShowClock,
@@ -22,6 +23,17 @@ static SimpleMenuSection menuSectionRoot;
 static SimpleMenuSection menuSectionsAll[1];
 
 static NumberWindow *durationChooserWindow;
+
+static const int VIBRATE_TICK_OPTIONS[] = {1, 2, 5, 10, 15, 30, 60, 120};
+
+int indexOf(int toFind, const int array[], uint16_t length) {
+    for(uint16_t i = 0; i < length; i++) {
+        if (toFind == array[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 /**
  Handler for number window, when you select a value.
@@ -55,6 +67,7 @@ void pomOnNumberSelect(struct NumberWindow *window, void *context) {
 void pomOnMenuSelect(int index, void *context) {
     PomSettings *s = &app.settings;
     PomMenuId id = index;
+    int temp;
     switch (id) {
         case PomMenuLanguage:
             if (++s->language >= PomLanguageCount) {
@@ -66,6 +79,12 @@ void pomOnMenuSelect(int index, void *context) {
             s->vibrateWhileWorking = !s->vibrateWhileWorking;
             break;
 
+        case PomMenuVibrateFrequency:
+            temp = indexOf(s->vibrateTicks, VIBRATE_TICK_OPTIONS, ARRAY_LENGTH(VIBRATE_TICK_OPTIONS));
+            temp = (temp + 1) % ARRAY_LENGTH(VIBRATE_TICK_OPTIONS);
+            s->vibrateTicks = VIBRATE_TICK_OPTIONS[temp];
+            break;
+            
         case PomMenuTakeLongRests:
             s->takeLongRests = !s->takeLongRests;
             break;
@@ -108,6 +127,7 @@ void pomUpdateMenus() {
     static char workDurationString[32];
     static char restDurationString[32];
     static char longRestDurationString[32];
+    static char tickFrequencyString[32];
     SimpleMenuItem *m;
     for (PomMenuId id = 0; id < PomMenuItemCount; id++) {
         m = &menuItems[id];
@@ -132,6 +152,12 @@ void pomUpdateMenus() {
             case PomMenuVibrateWhileWorking:
                 m->title = POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[lang];
                 m->subtitle = POM_TEXT_BOOLEAN[app.settings.vibrateWhileWorking][lang];
+                break;
+                
+            case PomMenuVibrateFrequency:
+                m->title = POM_TEXT_SETTINGS_VIBRATE_FREQUENCY[lang];
+                snprintf(tickFrequencyString, ARRAY_LENGTH(tickFrequencyString), POM_TEXT_X_SECONDS[lang], app.settings.vibrateTicks);
+                m->subtitle = tickFrequencyString;
                 break;
                 
             case PomMenuTakeLongRests:
