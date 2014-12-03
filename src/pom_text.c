@@ -87,14 +87,14 @@ const char* POM_TEXT_SETTINGS_REST_DURATION[] = {
 const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
     [PomEnglish] = "Tick while working",
     [PomSpanish] = "Terliz",
-    [PomFrench] = "Vibrations",
-    [PomGerman] = "Arbeit läuft",
+    [PomFrench] = "Tiques",
+    [PomGerman] = "Zecke",
 };
 const char* POM_TEXT_SETTINGS_VIBRATE_FREQUENCY[] = {
     [PomEnglish] = "Tick every",
-    [PomSpanish] = "Tick every", //TODO needs translation
-    [PomFrench] = "Tick every", //TODO needs translation
-    [PomGerman] = "Tick every", //TODO needs translation
+    [PomSpanish] = "Marque cada",
+    [PomFrench] = "Tick chaque",
+    [PomGerman] = "Kreuzen Sie alle",
 };
 const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[] = {
     [PomEnglish] = "Take recesses",
@@ -110,9 +110,9 @@ const char* POM_TEXT_SETTINGS_LONG_REST_DURATION[] = {
 };
 const char* POM_TEXT_SETTINGS_LONG_REST_RATIO[] = {
     [PomEnglish] = "Recess after every",
-    [PomSpanish] = "Recess after every", //TODO needs translation
-    [PomFrench] = "Recess after every", //TODO needs translation
-    [PomGerman] = "Recess after every", //TODO needs translation
+    [PomSpanish] = "Receso de cada",
+    [PomFrench] = "Évidement tous les",
+    [PomGerman] = "Recess nach jeweils",
 };
 const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
     [PomEnglish] = "Show Clock",
@@ -122,8 +122,8 @@ const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
 };
 const char* POM_TEXT_SETTINGS_AUTO_CONTINUE[] = {
     [PomEnglish] = "Auto start next",
-    [PomSpanish] = "Auto Start Next Session", //TODO needs translation
-    [PomFrench] = "Auto Start Next Session", //TODO needs translation
-    [PomGerman] = "Auto Start Next Session", //TODO needs translation
+    [PomSpanish] = "Arranque automático",
+    [PomFrench] = "Démarrage automatique",
+    [PomGerman] = "Autostart nächsten",
 };
 

@@ -3,8 +3,8 @@
   "shortName": "PblPom",
   "longName": "PblPom",
   "companyName": "Partlyhuman",
-  "versionCode": 2.5,
-  "versionLabel": "2.5",
+  "versionCode": 2.6,
+  "versionLabel": "2.6",
   "watchapp": {
     "watchface": false
   },
