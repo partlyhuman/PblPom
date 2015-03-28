@@ -88,13 +88,13 @@ const char* POM_TEXT_SETTINGS_VIBRATE_WHILE_WORKING[] = {
     [PomEnglish] = "Tick while working",
     [PomSpanish] = "Terliz",
     [PomFrench] = "Tiques",
-    [PomGerman] = "Zecke",
+    [PomGerman] = "Ticken",
 };
 const char* POM_TEXT_SETTINGS_VIBRATE_FREQUENCY[] = {
     [PomEnglish] = "Tick every",
     [PomSpanish] = "Marque cada",
     [PomFrench] = "Tick chaque",
-    [PomGerman] = "Kreuzen Sie alle",
+    [PomGerman] = "Ticke alle",
 };
 const char* POM_TEXT_SETTINGS_TAKE_LONG_RESTS[] = {
     [PomEnglish] = "Take recesses",
@@ -112,18 +112,18 @@ const char* POM_TEXT_SETTINGS_LONG_REST_RATIO[] = {
     [PomEnglish] = "Recess after every",
     [PomSpanish] = "Receso de cada",
     [PomFrench] = "Évidement tous les",
-    [PomGerman] = "Recess nach jeweils",
+    [PomGerman] = "Lange Pause nach jeweils",
 };
 const char* POM_TEXT_SETTINGS_SHOW_CLOCK[] = {
     [PomEnglish] = "Show Clock",
     [PomSpanish] = "Mostrar el reloj",
     [PomFrench] = "Montrer horloge",
-    [PomGerman] = "zeigen Uhr",
+    [PomGerman] = "Uhr zeigen",
 };
 const char* POM_TEXT_SETTINGS_AUTO_CONTINUE[] = {
     [PomEnglish] = "Auto start next",
     [PomSpanish] = "Arranque automático",
     [PomFrench] = "Démarrage automatique",
-    [PomGerman] = "Autostart nächsten",
+    [PomGerman] = "Autostart nach Pause",
 };
 
